@@ -1,3 +1,4 @@
 redis
+tornado-redis
 http://gevent.googlecode.com/files/gevent-1.0b2.tar.gz
 tornado-pyvows

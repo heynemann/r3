@@ -6,6 +6,7 @@ import logging
 
 import tornado.ioloop
 from tornado.httpserver import HTTPServer
+import tornadoredis
 
 from r3.app.app import R3ServiceApp
 
@@ -16,13 +17,19 @@ def main(arguments=None):
     port = int(arguments[1])
     ip = arguments[0]
 
+    redis_host = arguments[2]
+    redis_port = int(arguments[3])
+
     #log_level = arguments['log_level']
     #port = arguments['port']
     #ip = arguments['ip']
 
+    c = tornadoredis.Client(host=redis_host, port=redis_port, password="r3")
+    c.connect()
+
     logging.basicConfig(level=getattr(logging, log_level.upper()))
 
-    application = R3ServiceApp(log_level)
+    application = R3ServiceApp(redis=c, log_level=log_level)
 
     server = HTTPServer(application)
     server.bind(port, ip)

@@ -12,4 +12,8 @@ class BaseHandler(tornado.web.RequestHandler):
             logger.error(msg)
         self.finish()
 
+    @property
+    def redis(self):
+        return self.application.redis
+
 
