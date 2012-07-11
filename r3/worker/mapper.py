@@ -21,6 +21,31 @@ class CrashError(JobError):
 class TimeoutError(JobError):
     pass
 
+class FastMapper:
+    def __init__(self, key, redis_host, redis_port, redis_db, redis_pass):
+        self.mapper_key = key
+        self.redis = redis.StrictRedis(host=redis_host, port=redis_port, db=redis_db, password=redis_pass)
+        self.timeout = None
+        self.initialize()
+        print "MAPPER UP - PID: %s" % os.getpid()
+
+    def initialize(self):
+        pass
+
+    def map(self):
+        raise NotImplementedError()
+
+    def run_block(self):
+        while True:
+            mapper_input_queue = 'r3::jobs::%s::input' % self.mapper_key
+
+            key, item = self.redis.blpop(mapper_input_queue, timeout=0)
+
+            item = loads(item)
+            result = dumps(self.map(item['item']))
+            self.redis.lpush(item['output_queue'], result)
+
+
 class Mapper:
     def __init__(self, key, redis_host, redis_port, redis_db, redis_pass):
         self.mapper_key = key

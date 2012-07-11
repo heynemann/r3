@@ -3,9 +3,9 @@
 
 import sys
 
-from r3.worker.mapper import Mapper
+from r3.worker.mapper import FastMapper
 
-class CountWordsMapper(Mapper):
+class CountWordsMapper(FastMapper):
     def map(self, line):
         return list(self.split_words(line))
 

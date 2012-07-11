@@ -12,7 +12,6 @@ from r3.app.handlers import BaseHandler
 
 class StreamHandler(BaseHandler):
     @tornado.web.asynchronous
-    @tornado.gen.engine
     def get(self):
         arguments = self.request.arguments
         job_key = arguments['key'][0]
@@ -38,7 +37,7 @@ class StreamHandler(BaseHandler):
                 'job_key': job_key,
                 'item': item
             }
-            yield tornado.gen.Task(self.redis.rpush, mapper_input_queue, dumps(msg))
+            self.redis.rpush(mapper_input_queue, dumps(msg))
 
         #pipe = self.redis.pipeline()
         #results = []
@@ -52,26 +51,22 @@ class StreamHandler(BaseHandler):
         #print len(items)
 
         results = []
-        #mapped_items = yield tornado.gen.Task(self.redis.llen, mapper_output_queue)
-        def wtf(item):
-            import ipdb;ipdb.set_trace()
-
-        #while (len(results) < len(items)):
+        while (len(results) < len(items)):
             #print "%d < %d" % (len(results), len(items))
-        self.redis.blpop(mapper_output_queue, callback=wtf)
-            #item = loads(item)
-            #results.append(item)
+            key, item = self.redis.blpop(mapper_output_queue)
+            item = loads(item)
+            results.append(item)
 
-        #print "map took %.2f" % (time.time() - start)
+        print "map took %.2f" % (time.time() - start)
 
-        #start = time.time()
-        #reducer = self.application.reducers[job_key]
-        #result = reducer.reduce(results)
-        #print "reduce took %.2f" % (time.time() - start)
+        start = time.time()
+        reducer = self.application.reducers[job_key]
+        result = reducer.reduce(results)
+        print "reduce took %.2f" % (time.time() - start)
 
-        #self.set_header('Content-Type', 'application/json')
+        self.set_header('Content-Type', 'application/json')
 
-        #self.write(dumps(result))
+        self.write(dumps(result))
 
-        #self.finish()
+        self.finish()
 
