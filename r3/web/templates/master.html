@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>r³{% block title %}{% endblock %}</title>
+    {%  block css %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" media="screen" charset="utf-8">
+    {% endblock %}
+</head>
+<body>
+    <header>
+        <div class="container">
+            <a href="/" alt="overview"><h1>r³ - map reduce service</h1></a>
+            <nav>
+                <ul>
+                    <li><a href="/" alt="overview">overview</a></li>
+                    <li><a href="/working" alt="working">working</a></li>
+                    <li><a href="/failed" alt="failed">failed</a></li>
+                    <li><a href="/job-types" alt="job types">job types</a></li>
+                    <li><a href="/mappers" alt="mappers">mappers</a></li>
+                    <li><a href="/stats" alt="stats">stats</a></li>
+                </ul>
+            </nav>
+            <aside>
+                <p>r³ service running - 3 active workers - 2 active job types</p>
+                <p>connected to Redis on redis.r3.globoi.com:9999</p>
+            </aside>
+        </div>
+    </header>
+    {% block body %}
+    {% endblock %}
+    {% block js %}
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.min.js') }}" charset="utf-8"></script>
+    {% endblock %}
+    <footer>
+    </footer>
+</body>
+</html>

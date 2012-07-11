@@ -1,0 +1,29 @@
+.container {
+    width: 95%;
+    margin: 0 auto;
+}
+
+header {
+    background-color: #4d7cb5;
+    height: 102px;
+    overflow: hidden;
+}
+
+header a {
+    display: block;
+    float: left;
+}
+
+header a h1 {
+    background: url(../img/logo.png) no-repeat;
+    width: 162px;
+    height: 62px;
+    margin-top: 20px;
+    margin-left: 40px;
+    text-indent: -999999px;
+}
+
+header nav {
+    float: right;
+    width: 300px;
+}
