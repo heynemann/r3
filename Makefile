@@ -3,7 +3,7 @@ run:
 	@PYTHONPATH=$$PYTHONPATH:.:./test python r3/app/server.py 0.0.0.0 9999 localhost 7778
 
 worker:
-	@cd test && PYTHONPATH=$$PYTHONPATH:.:.. python count_words_mapper.py localhost 7778
+	@cd test && PYTHONPATH=$$PYTHONPATH:.:.. python count_words_mapper.py localhost 7778 ${KEY}
 
 # %%%%%%%%%%%%%% REDIS %%%%%%%%%%%%%%
 kill_redis:

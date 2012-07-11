@@ -45,8 +45,53 @@ class FastMapper:
             result = dumps(self.map(item['item']))
             self.redis.lpush(item['output_queue'], result)
 
+class SafeMapper:
+    def __init__(self, key, process_name, redis_host, redis_port, redis_db, redis_pass):
+        self.mapper_key = key
+        self.process_name = process_name
+        self.redis = redis.StrictRedis(host=redis_host, port=redis_port, db=redis_db, password=redis_pass)
+        self.timeout = None
+        self.input_queue = 'r3::jobs::%s::input' % self.mapper_key
+        self.working_queue = 'r3::jobs::%s::%s::working' % (self.mapper_key, self.process_name)
+        self.max_retries = 5
 
-class Mapper:
+        self.initialize()
+        print "Mapper UP - pid: %s" % os.getpid()
+        print "Input Q: %s" % self.input_queue
+        print "Working Q: %s" % self.working_queue
+
+    def initialize(self):
+        item = self.redis.rpop(self.working_queue)
+        if item:
+            json_item = loads(item)
+            json_item['retries'] += 1
+
+            if json_item['retries'] > self.max_retries:
+                json_item['error'] = '%s errored out after %d retries.' % (self.process_name, json_item['retries'])
+                self.redis.rpush(json_item['output_queue'], dumps(json_item))
+            else:
+                item = dumps(json_item)
+                self.map_item(item, json_item)
+
+    def map(self):
+        raise NotImplementedError()
+
+    def run_block(self):
+        while True:
+            key, item = self.redis.brpop(self.input_queue, timeout=0)
+            json_item = loads(item)
+            self.map_item(item, json_item)
+
+    def map_item(self, item, json_item):
+        self.redis.rpush(self.working_queue, item)
+        result = dumps(self.map(json_item['item']))
+        self.redis.rpush(json_item['output_queue'], dumps({
+            'result': result
+        }))
+        self.redis.delete(self.working_queue)
+
+
+class ForkMapper:
     def __init__(self, key, redis_host, redis_port, redis_db, redis_pass):
         self.mapper_key = key
         self.redis = redis.StrictRedis(host=redis_host, port=redis_port, db=redis_db, password=redis_pass)
