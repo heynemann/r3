@@ -73,8 +73,95 @@ header aside .redis-url {
     color: #fff;
 }
 
+h1 {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.main .section {
+    margin-top: 34px;
+    position: relative;
+}
+
+.main .section h1 {
+    padding-bottom: 4px;
+    margin-bottom: 20px;
+    border-bottom: solid 1px #d5d5d5;
+}
+
+.main .section .explain {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 13px;
+    font-weight: bold;
+    color: #999;
+}
+
+.main .current-jobs table {
+    margin-left: 10px;
+    width: 600px !important;
+}
+
+.main .current-jobs table .job-id-col {
+    width: 25%;
+}
+
+.main .section table a {
+    font-size: 13px;
+    text-decoration: none;
+    color: #4d7cb5;
+}
+
+.main .section table a:hover {
+    text-decoration: underline;
+}
+
+.main .section h2 a {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #4d7cb5;
+    text-decoration: none;
+    display: block;
+}
+
+.main .mappers .filters {
+    float: right;
+    margin-bottom: 4px;
+}
+
+.main .mappers .filters li {
+    float: left;
+    margin-right: 6px;
+}
+
+.main .mappers .filters li a {
+    font-size: 11px;
+    font-weight: bold;
+    color: #4d7cb5;
+    text-decoration: none;
+    display: block;
+}
+
+.main .mappers .filters li a:hover {
+    text-decoration: underline;
+}
+
+table tr th {
+    font-size: 11px;
+    background-color: #4d7cb5;
+    color: white;
+}
+
+table tbody tr td {
+    cursor: pointer;
+    font-size: 13px;
+}
+
 footer {
-    height: 50px;
+    height: 42px;
     background-color: #4d7cb5;
     text-align: center;
     overflow: hidden;
