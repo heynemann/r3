@@ -1,3 +1,7 @@
+body {
+    font-family: arial;
+}
+
 .container {
     width: 95%;
     margin: 0 auto;
@@ -23,7 +27,69 @@ header a h1 {
     text-indent: -999999px;
 }
 
-header nav {
+header .menu {
     float: right;
-    width: 300px;
+    margin-top: 26px;
 }
+
+header nav {
+    overflow: hidden;
+    height: 18px;
+}
+
+header nav li {
+    padding: 0 5px;
+    border-right: solid 1px #5c84b5;
+    float: left;
+}
+
+header nav li:last-child {
+    border-right: none;
+    padding-right: 0;
+}
+
+header nav li a {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+header nav li a:hover {
+    text-decoration: underline;
+}
+
+header aside {
+    text-align: right;
+    margin-top: 12px;
+    font-size: 13px;
+    color: #c6cfd9;
+}
+
+header aside .running,
+header aside .active-workers,
+header aside .active-job-types,
+header aside .redis-url {
+    font-weight: bold;
+    color: #fff;
+}
+
+footer {
+    height: 50px;
+    background-color: #4d7cb5;
+    text-align: center;
+    overflow: hidden;
+}
+
+footer a {
+    color: #fff;
+    font-weight: bold;
+    text-decoration: none;
+    font-size: 11px;
+    margin-top: 15px;
+    display: block;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
