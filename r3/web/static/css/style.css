@@ -1,3 +1,7 @@
+ul {
+    list-style: none;
+}
+
 body {
     font-family: arial;
     background-color: #4d7cb5;
@@ -128,7 +132,8 @@ h1 {
 }
 
 .main .failed-jobs table .job-id-col {
-    width: 200px;
+    width: 250px;
+    text-align: center;
 }
 
 .main .failed-jobs table .job-date-col {
@@ -136,8 +141,13 @@ h1 {
     text-align: center;
 }
 
+.main .failed-jobs table .job-type-col {
+    width: 100px;
+    text-align: center;
+}
+
 .main .failed-jobs table .job-actions-col {
-    width: 110px;
+    width: 80px;
     text-align: center;
 }
 
@@ -221,6 +231,7 @@ table tr th {
 
 table tbody tr td {
     font-size: 13px;
+    vertical-align: middle !important;
 }
 
 footer {
@@ -253,4 +264,17 @@ footer a:hover {
 
 .table {
     margin-bottom: 0 !important;
+}
+
+.notice {
+    padding-top: 15px;
+}
+
+.notice .alert {
+    width: 75%;
+    margin: 0 auto;
+}
+
+.notice .alert .close {
+    text-decoration: none;
 }

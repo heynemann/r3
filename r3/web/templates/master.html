@@ -29,6 +29,7 @@
                     <p>r³ service status: <span class="running">running</span> :: active mappers: <span class="active-workers">3</span> :: available job types: <span class="active-job-types">2</span></p>
                     <p>connected to Redis on <span class="redis-url">redis.r3.globoi.com:9999</span></p>
                 </aside>
+
             </div>
         </div>
     </header>
@@ -43,6 +44,7 @@
     </footer>
     {% block js %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.min.js') }}" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}" charset="utf-8"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/progress.js') }}" charset="utf-8"></script>
     {% endblock %}
 </body>

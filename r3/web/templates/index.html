@@ -3,6 +3,17 @@
 {% block title %} - Overview{% endblock %}
 
 {% block body %}
+
+{% if failed_warning %}
+<div class="notice">
+    <div class="alert alert-error">
+        <a class="close" data-dismiss="alert" href="#">×</a>
+        <h4 class="alert-heading">Warning!</h4>
+        Some messages have failed.
+    </div>
+</div>
+{% endif %}
+
 <div class="container main">
     <div class="current-jobs section">
         <h1>Jobs in Progress</h1>

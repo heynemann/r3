@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import random
 
 from flask import Flask, render_template
 
@@ -9,7 +10,8 @@ app = Flask(__name__)
 
 @app.route("/")
 def index():
-    return render_template('index.html')
+    failing = random.randint(1,2)
+    return render_template('index.html', failed_warning=failing == 1)
 
 @app.route("/mappers")
 def mappers():
