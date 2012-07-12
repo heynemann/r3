@@ -11,6 +11,27 @@ app = Flask(__name__)
 def index():
     return render_template('index.html')
 
+@app.route("/mappers")
+def mappers():
+    return render_template('mappers.html')
+
+@app.route("/failed")
+def failed():
+    return render_template('failed.html')
+
+@app.route("/job-types")
+def job_types():
+    return render_template('job-types.html')
+
+@app.route("/stats")
+def stats():
+    return render_template('stats.html')
+
+@app.route("/jobs/<job_id>")
+def job(job_id):
+    return render_template('job.html', job_id=job_id)
+
+
 if __name__ == "__main__":
     host = sys.argv[1]
     port = int(sys.argv[2])

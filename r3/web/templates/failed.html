@@ -1,0 +1,49 @@
+{% extends "master.html" %}
+
+{% block title %} - Failed{% endblock %}
+
+{% block body %}
+<div class="container main">
+    <div class="failed-jobs section">
+        <h1>Failed Jobs</h1>
+
+        <div class="filters">
+            <ul>
+                <li><a href="#" data-filter="all">all</a></li>
+                <li><a href="#" data-filter="count-words">count-words</a></li>
+                <li><a href="#" data-filter="facial-recognition">facial-recognition</a></li>
+            </ul>
+        </div>
+
+        <div class="actions">
+            <button class="retry-all btn btn-small btn-info">retry all</button><button class="delete-all btn btn-small btn-danger">delete all</button>
+        </div>
+
+        <table class="table table-striped table-bordered table-condensed">
+            <thead>
+                <tr>
+                    <th class="job-type-col">Job Type</th>
+                    <th class="job-id-col">Job ID</th>
+                    <th>Date</th>
+                    <th>Message</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for i in range(1, 10) %}
+                <tr>
+                    <td>count-words</td>
+                    <td><a href="/job-types/count-words/jobs/1293912391293">219391391239</a></td>
+                    <td class="job-date-col">11-Sep-1981 10:10:10</td>
+                    <td>count-words-1 failed after 5 retries.</td>
+                    <td class="job-actions-col"><button class="retry btn btn-small btn-info">retry</button><button class="delete btn btn-small btn-danger">delete</button></td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <span class="explain">click retry or delete to change a failed job</span>
+    </div>
+
+</div>
+{% endblock %}

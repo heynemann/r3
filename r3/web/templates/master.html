@@ -7,6 +7,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/reset.css') }}" type="text/css" media="screen" charset="utf-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" type="text/css" media="screen" charset="utf-8">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/progress.css') }}" type="text/css" media="screen" charset="utf-8">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" type="text/css" media="screen" charset="utf-8">
     {% endblock %}
 </head>
@@ -18,27 +19,31 @@
                 <nav>
                     <ul>
                         <li><a href="/" alt="overview">overview</a></li>
-                        <li><a href="/working" alt="working">working</a></li>
-                        <li><a href="/failed" alt="failed">failed</a></li>
                         <li><a href="/job-types" alt="job types">job types</a></li>
                         <li><a href="/mappers" alt="mappers">mappers</a></li>
+                        <li><a href="/failed" alt="failed">failed</a></li>
                         <li><a href="/stats" alt="stats">stats</a></li>
                     </ul>
                 </nav>
                 <aside>
-                    <p>r³ service status: <span class="running">running</span> :: active workers: <span class="active-workers">3</span> :: available job types: <span class="active-job-types">2</span></p>
+                    <p>r³ service status: <span class="running">running</span> :: active mappers: <span class="active-workers">3</span> :: available job types: <span class="active-job-types">2</span></p>
                     <p>connected to Redis on <span class="redis-url">redis.r3.globoi.com:9999</span></p>
                 </aside>
             </div>
         </div>
     </header>
+    <div class="body">
     {% block body %}
     {% endblock %}
+    </div>
+    <footer>
+        <div class="cell">
+            <a href="http://github.com/heynemann/r3" alt="r3 map reduce service">powered by r³ version 0.1.0</a>
+        </div>
+    </footer>
     {% block js %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.min.js') }}" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/progress.js') }}" charset="utf-8"></script>
     {% endblock %}
-    <footer>
-        <a href="http://github.com/heynemann/r3" alt="r3 map reduce service">powered by r³ version 0.1.0</a>
-    </footer>
 </body>
 </html>

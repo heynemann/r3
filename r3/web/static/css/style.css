@@ -1,5 +1,6 @@
 body {
     font-family: arial;
+    background-color: #4d7cb5;
 }
 
 .container {
@@ -7,8 +8,12 @@ body {
     margin: 0 auto;
 }
 
+.body {
+    background-color: #fff;
+    padding-bottom: 20px;
+}
+
 header {
-    background-color: #4d7cb5;
     height: 102px;
     overflow: hidden;
 }
@@ -37,9 +42,13 @@ header nav {
     height: 18px;
 }
 
+header nav ul {
+    float: right;
+}
+
 header nav li {
-    padding: 0 5px;
-    border-right: solid 1px #5c84b5;
+    padding: 0 8px;
+    border-right: solid 1px #8a9db5;
     float: left;
 }
 
@@ -73,6 +82,10 @@ header aside .redis-url {
     color: #fff;
 }
 
+header aside p:first-child {
+    margin-bottom: 4px;
+}
+
 h1 {
     font-size: 16px;
     font-weight: bold;
@@ -80,20 +93,21 @@ h1 {
 }
 
 .main .section {
-    margin-top: 34px;
+    padding-top: 34px;
+    padding-bottom: 15px;
     position: relative;
 }
 
 .main .section h1 {
     padding-bottom: 4px;
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
     border-bottom: solid 1px #d5d5d5;
 }
 
 .main .section .explain {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 34px;
     font-size: 13px;
     font-weight: bold;
     color: #999;
@@ -108,6 +122,40 @@ h1 {
     width: 25%;
 }
 
+
+.main .failed-jobs .filters {
+    margin-top: 30px;
+}
+
+.main .failed-jobs table .job-id-col {
+    width: 200px;
+}
+
+.main .failed-jobs table .job-date-col {
+    width: 150px;
+    text-align: center;
+}
+
+.main .failed-jobs table .job-actions-col {
+    width: 110px;
+    text-align: center;
+}
+
+.main .failed-jobs .actions {
+    float: left;
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.main .stats .actions {
+    margin-top: 15px;
+    margin-bottom: 10px;
+}
+
+.main .job pre {
+    margin-top: 15px;
+}
+
 .main .section table a {
     font-size: 13px;
     text-decoration: none;
@@ -118,26 +166,42 @@ h1 {
     text-decoration: underline;
 }
 
-.main .section h2 a {
+.main .section h2  {
+    margin-top: 15px;
+}
+
+.main .section h2 {
     font-size: 12px;
     font-weight: bold;
     margin-bottom: 10px;
-    color: #4d7cb5;
+    color: #333;
     text-decoration: none;
-    display: block;
+    display: inline-block;
 }
 
-.main .mappers .filters {
+.main .stats h2  {
+    margin-bottom: 10px;
+}
+
+.main .section h3  {
+    font-size: 11px;
+    color: #999;
+    display: block;
+    margin-top: -8px;
+    margin-bottom: 10px;
+}
+
+.main .filters {
     float: right;
     margin-bottom: 4px;
 }
 
-.main .mappers .filters li {
+.main .filters li {
     float: left;
     margin-right: 6px;
 }
 
-.main .mappers .filters li a {
+.main .filters li a {
     font-size: 11px;
     font-weight: bold;
     color: #4d7cb5;
@@ -145,7 +209,7 @@ h1 {
     display: block;
 }
 
-.main .mappers .filters li a:hover {
+.main .filters li a:hover {
     text-decoration: underline;
 }
 
@@ -156,15 +220,22 @@ table tr th {
 }
 
 table tbody tr td {
-    cursor: pointer;
     font-size: 13px;
 }
 
 footer {
-    height: 42px;
+    width: 100%;
+    height: 100%;
     background-color: #4d7cb5;
     text-align: center;
     overflow: hidden;
+    display: table;
+}
+
+footer .cell {
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
 }
 
 footer a {
@@ -172,11 +243,14 @@ footer a {
     font-weight: bold;
     text-decoration: none;
     font-size: 11px;
-    margin-top: 15px;
     display: block;
+    margin: 20px 0;
 }
 
 footer a:hover {
     text-decoration: underline;
 }
 
+.table {
+    margin-bottom: 0 !important;
+}
