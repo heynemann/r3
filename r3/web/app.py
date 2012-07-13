@@ -6,6 +6,7 @@ import random
 from flask import Flask, render_template, g
 
 from r3.web.extensions import RedisDB
+from r3.version import __version__
 
 app = Flask(__name__)
 
@@ -13,7 +14,8 @@ def server_context():
     return {
         'mappers': [],
         'job_types': [],
-        'r3_service_status': 'running'
+        'r3_service_status': 'running',
+        'r3_version': __version__
     }
 
 @app.before_request
