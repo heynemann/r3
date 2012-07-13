@@ -10,13 +10,14 @@
         <div class="filters">
             <ul>
                 <li><a href="#" data-filter="all">all</a></li>
-                <li><a href="#" data-filter="count-words">count-words</a></li>
-                <li><a href="#" data-filter="facial-recognition">facial-recognition</a></li>
+                {% for job_type in g.job_types %}
+                <li><a href="#" data-filter="{{ job_type }}">{{ job_type }}</a></li>
+                {% endfor %}
             </ul>
         </div>
 
         <div class="actions">
-            <button class="delete-all btn btn-small btn-danger">delete all</button>
+            <a href="/failed/delete" class="delete-all btn btn-small btn-danger">delete all</a>
         </div>
 
         <table class="table table-striped table-bordered table-condensed">
@@ -30,13 +31,17 @@
                 </tr>
             </thead>
             <tbody>
-                {% for i in range(1, 10) %}
+                {% for error in errors %}
                 <tr>
-                    <td class="job-type-col">count-words</td>
-                    <td class="job-id-col">f3cf34f0-9bc9-462d-95b5-fa01307c8c53</td>
-                    <td class="job-date-col">11-Sep-1981 10:10:10</td>
-                    <td>count-words-1 failed after 5 retries.</td>
-                    <td class="job-actions-col"><button class="delete btn btn-small btn-danger">delete</button></td>
+                    <td class="job-type-col">{{ error['job_key'] }}</td>
+                    <td class="job-id-col">{{ error['job_id'] }}</td>
+                    <td class="job-date-col">{{ error['date'] }}</td>
+                    <td>{{ error['error'] }}</td>
+                    <td class="job-actions-col"><a href="/failed/delete/{{ error['job_id'] }}" class="delete btn btn-small btn-danger">delete</a></td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="5" class="no-fails">No errors happened so far. Yay!!!</td>
                 </tr>
                 {% endfor %}
             </tbody>

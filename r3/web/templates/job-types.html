@@ -7,7 +7,7 @@
     <div class="current-jobs section">
         <h1>Jobs in Progress</h1>
 
-        {% for job_type in job_types %}
+        {% for job_type in g.job_types %}
         <h2>{{ job_type }}</h2>
         <table class="table table-striped table-bordered table-condensed">
             <thead>
@@ -17,9 +17,9 @@
                 </tr>
             </thead>
             <tbody>
-                {% for job in jobs[job_type] %}
+                {% for job in g.jobs[job_type] %}
                 <tr>
-                    <td><a href="/jobs/1293912391293">219391391239</a></td>
+                    <td><a href="/jobs/{{ job }}">{{ job }}</a></td>
                     <td>Mapping</td>
                 </tr>
                 {% else %}

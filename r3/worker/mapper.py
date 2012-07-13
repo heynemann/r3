@@ -74,6 +74,7 @@ class SafeMapper:
 
     def initialize(self):
         signal.signal(signal.SIGTERM, self.handle_signal)
+        self.ping()
 
         item = self.redis.rpop(self.working_queue)
         if item:
@@ -81,7 +82,7 @@ class SafeMapper:
             json_item['retries'] += 1
 
             if json_item['retries'] > self.max_retries:
-                json_item['error'] = '%s errored out after %d retries.' % (self.process_name, json_item['retries'])
+                json_item['error'] = '%s errored out after %d retries.' % (self.full_name, json_item['retries'])
                 self.redis.rpush(json_item['output_queue'], dumps(json_item))
             else:
                 item = dumps(json_item)
@@ -108,6 +109,7 @@ class SafeMapper:
         self.redis.delete(self.ping_key % self.full_name)
 
     def ping(self):
+        self.redis.delete('r3::mappers::%s::working' % self.full_name)
         self.redis.sadd(self.job_types_key, self.mapper_key)
         self.redis.sadd(self.mappers_key, self.full_name)
         self.redis.set(self.ping_key % self.full_name, datetime.now().strftime(DATETIME_FORMAT))

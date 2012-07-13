@@ -2,11 +2,13 @@
 # -*- coding: utf-8 -*-
 
 import sys
+import time
 
 from r3.worker.mapper import SafeMapper
 
 class CountWordsMapper(SafeMapper):
     def map(self, lines):
+        time.sleep(0.5)
         return list(self.split_words(lines))
 
     def split_words(self, lines):

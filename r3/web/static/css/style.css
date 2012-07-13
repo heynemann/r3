@@ -123,9 +123,8 @@ h1 {
 }
 
 .main .current-jobs table .job-id-col {
-    width: 25%;
+    width: 250px;
 }
-
 
 .main .failed-jobs .filters {
     margin-top: 30px;
@@ -350,6 +349,7 @@ table.no-jobs {
 }
 
 .no-jobs,
+.no-fails,
 .no-mappers {
     height: 90px;
     vertical-align: middle !important;
@@ -361,4 +361,14 @@ table.no-jobs {
 
 .mappers-table .mapper-name {
     width: 200px;
+}
+
+.main .failed-jobs table a {
+    color: #fff;
+}
+
+.main .failed-jobs .actions a {
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
 }

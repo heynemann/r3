@@ -10,7 +10,7 @@
         <div class="filters">
             <ul>
                 <li><a href="#" data-filter="all">all</a></li>
-                {% for job_type in job_types %}
+                {% for job_type in g.job_types %}
                 <li><a href="#" data-filter="{{ job_type }}">{{ job_type }}</a></li>
                 {% endfor %}
             </ul>
@@ -24,7 +24,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for mapper, status in mappers.iteritems() %}
+                {% for mapper, status in g.mappers.iteritems() %}
                 <tr>
                     <td>{{ mapper }}</td>
                     {% if status %}
