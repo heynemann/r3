@@ -1,12 +1,25 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 
-import sys
 import random
 
-from flask import Flask, render_template
+from flask import Flask, render_template, g
+
+from r3.web.extensions import RedisDB
 
 app = Flask(__name__)
+
+def server_context():
+    return {
+        'mappers': [],
+        'job_types': [],
+        'r3_service_status': 'running'
+    }
+
+@app.before_request
+def before_request():
+    g.config = app.config
+    g.server = server_context()
 
 @app.route("/")
 def index():
@@ -35,11 +48,7 @@ def job(job_id):
 
 
 if __name__ == "__main__":
-    host = sys.argv[1]
-    port = int(sys.argv[2])
-    redis_host = sys.argv[3]
-    redis_port = int(sys.argv[4])
-    app.redis_host = redis_host
-    app.redis_port = redis_port
-    app.run(debug=True, host=host, port=port)
+    app.config.from_object('r3.web.config')
+    db = RedisDB(app)
+    app.run(debug=True, host=app.config['WEB_HOST'], port=app.config['WEB_PORT'])
 
