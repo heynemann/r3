@@ -62,8 +62,9 @@ def index():
 def mappers():
     flush_dead_mappers(db.connection, MAPPERS_KEY, LAST_PING_KEY)
     all_mappers = get_mappers()
+    all_job_types = db.connection.smembers(JOB_TYPES_KEY)
 
-    return render_template('mappers.html', mappers=all_mappers)
+    return render_template('mappers.html', mappers=all_mappers, job_types=all_job_types)
 
 @app.route("/failed")
 def failed():
