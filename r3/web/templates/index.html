@@ -8,8 +8,7 @@
 <div class="notice">
     <div class="alert alert-error">
         <a class="close" data-dismiss="alert" href="#">×</a>
-        <h4 class="alert-heading">Warning!</h4>
-        Some messages have failed.
+        Some messages have failed. <a href="/failed" class="failed">Click here</a> to take action.
     </div>
 </div>
 {% endif %}
@@ -18,7 +17,8 @@
     <div class="current-jobs section">
         <h1>Jobs in Progress</h1>
 
-        <h2>count-words</h2>
+        {% for job_type in job_types %}
+        <h2>{{ job_type }}</h2>
         <table class="table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
@@ -27,21 +27,20 @@
                 </tr>
             </thead>
             <tbody>
+                {% for job in jobs[job_type] %}
                 <tr>
                     <td><a href="/jobs/1293912391293">219391391239</a></td>
                     <td>Mapping</td>
                 </tr>
-                {% for i in range(2, 5) %}
+                {% else %}
                 <tr>
-                    <td><a href="/jobs/1293912391293">219391391239</a></td>
-                    <td>Mapping</td>
+                    <td colspan="2" class="no-jobs">Nothing happening here right now...</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
-
-        <h2>facial-recognition</h2>
-        <table class="table table-striped table-bordered table-condensed">
+        {% else %}
+        <table class="no-jobs table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
                     <th class="job-id-col">Job ID</th>
@@ -50,21 +49,14 @@
             </thead>
             <tbody>
                 <tr>
-                    <td><a href="/jobs/1293912391293">219391391239</a></td>
-                    <td>Mapping<td>
+                    <td colspan="2" class="no-jobs">Nothing happening here right now...</td>
                 </tr>
-                {% for i in range(2, 5) %}
-                <tr>
-                    <td><a href="/jobs/1293912391293">219391391239</a></td>
-                    <td>Mapping</td>
-                </tr>
-                {% endfor %}
             </tbody>
         </table>
+        {% endfor %}
 
         <span class="explain">click a job type to view its activity</span>
     </div>
-
 
     <div class="mappers section">
         <h1>Mappers</h1>
@@ -72,27 +64,32 @@
         <div class="filters">
             <ul>
                 <li><a href="#" data-filter="all">all</a></li>
-                <li><a href="#" data-filter="count-words">count-words</a></li>
-                <li><a href="#" data-filter="facial-recognition">facial-recognition</a></li>
+                {% for job_type in job_types %}
+                <li><a href="#" data-filter="{{ job_type }}">{{ job_type }}</a></li>
+                {% endfor %}
             </ul>
         </div>
 
-        <table class="table table-striped table-bordered table-condensed">
+        <table class="mappers-table table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
-                    <th>Name</th>
-                    <th>Working on</th>
+                    <th class="mapper-name">Name</th>
+                    <th class="working">Working on</th>
                 </tr>
             </thead>
             <tbody>
+                {% for mapper, status in mappers.iteritems() %}
                 <tr>
-                    <td>count-words-1</td>
-                    <td>Awaiting further jobs...</td>
+                    <td>{{ mapper }}</td>
+                    {% if status %}
+                    <td>Processing job <a href="/jobs/{{ status }}">{{ status }}</a></td>
+                    {% else %}
+                    <td>Waiting for a new job...</td>
+                    {% endif %}
                 </tr>
-                {% for i in range(2, 42) %}
+                {% else %}
                 <tr>
-                    <td>count-words-{{ i }}</td>
-                    <td>Processing job <a href="/jobs/194912941949123">419294934939494</a></td>
+                    <td class="no-mappers" colspan="2">No mappers registered so far...</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -100,8 +97,5 @@
 
         <span class="explain">click a mapper to view its activity</span>
     </div>
-
-
-
 </div>
 {% endblock %}

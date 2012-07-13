@@ -20,7 +20,7 @@ class StreamHandler(BaseHandler):
         #mapper_input_queue = 'r3::jobs::%s::input' % job_key
         #self.redis.delete(mapper_input_queue)
         #return
- 
+
         start = time.time()
         input_stream = self.application.input_streams[job_key]
         items = input_stream.process(arguments)

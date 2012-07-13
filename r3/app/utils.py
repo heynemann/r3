@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 
 import logging
+from datetime import datetime
+
+DATETIME_FORMAT = '%Y-%m-%d %H:%M:%S'
+TIMEOUT = 15
 
 def real_import(name):
     if '.'  in name:
@@ -9,3 +13,17 @@ def real_import(name):
     return __import__(name)
 
 logger = logging.getLogger('R3ServiceApp')
+
+def flush_dead_mappers(redis, mappers_key, ping_key):
+    mappers = redis.smembers(mappers_key)
+    for mapper in mappers:
+        last_ping = redis.get(ping_key % mapper)
+        if last_ping:
+            now = datetime.now()
+            last_ping = datetime.strptime(last_ping, DATETIME_FORMAT)
+            if ((now - last_ping).seconds > TIMEOUT):
+                logging.warning('MAPPER %s found to be inactive after %d seconds of not pinging back' % (mapper, TIMEOUT))
+                redis.srem(mappers_key, mapper)
+                redis.delete(ping_key % mapper)
+
+

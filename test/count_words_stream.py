@@ -8,6 +8,14 @@ class CountWordsStream:
         with open(abspath(join(dirname(__file__), 'chekhov.txt'))) as f:
             contents = f.readlines()
 
-        return [line.lower() for line in contents]
+        items = []
+        current_item = []
+        items.append(current_item)
+        for line in contents:
+            if len(current_item) == 1000:
+                current_item = []
+                items.append(current_item)
+            current_item.append(line.lower())
+        return items
 
 

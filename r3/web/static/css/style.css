@@ -131,6 +131,10 @@ h1 {
     margin-top: 30px;
 }
 
+.main .mappers .filters {
+    margin-top: 30px;
+}
+
 .main .failed-jobs table .job-id-col {
     width: 250px;
     text-align: center;
@@ -313,4 +317,48 @@ footer a:hover {
 
 .stats .nav a:hover {
     text-decoration: underline;
+}
+
+.alert {
+    position: relative;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.alert .failed {
+    text-decoration: none;
+    color: #4d7cb5;
+}
+
+.alert .failed:hover {
+    text-decoration: underline;
+}
+
+.alert .close {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    color: #333;
+}
+
+.alert .close:hover {
+    color: #999;
+}
+
+table.no-jobs {
+    margin-top: 20px;
+}
+
+.no-jobs,
+.no-mappers {
+    height: 90px;
+    vertical-align: middle !important;
+    text-align: center !important;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+}
+
+.mappers-table .mapper-name {
+    width: 200px;
 }
