@@ -278,3 +278,24 @@ footer a:hover {
 .notice .alert .close {
     text-decoration: none;
 }
+
+.stats .redis {
+    width: auto;
+}
+
+.stats .redis .key {
+    width: 190px;
+}
+
+.stats .redis .value {
+    min-width: 300px;
+}
+
+.stats .keys .no-keys {
+    height: 90px;
+    vertical-align: middle;
+    text-align: center;
+    font-size: 28px;
+    font-weight: bold;
+    color: #aaa;
+}

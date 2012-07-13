@@ -9,3 +9,4 @@ WEB_PORT = 8888
 
 REDIS_HOST = 'localhost'
 REDIS_PORT = 7778
+REDIS_PASS = 'r3'

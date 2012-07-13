@@ -42,7 +42,9 @@ def job_types():
 
 @app.route("/stats")
 def stats():
-    return render_template('stats.html')
+    info = db.connection.info()
+    keys = db.connection.keys('r3::*')
+    return render_template('stats.html', info=info, keys=keys)
 
 @app.route("/jobs/<job_id>")
 def job(job_id):

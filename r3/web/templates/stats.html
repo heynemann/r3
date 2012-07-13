@@ -19,11 +19,11 @@
             <tbody>
                 <tr>
                     <td>job-types</td>
-                    <td>2</td>
+                    <td>{{ g.server['job_types']|count }}</td>
                 </tr>
                 <tr>
                     <td>redis server</td>
-                    <td>redis.r3.globoi.com:20004</td>
+                    <td>{{ g.config['REDIS_HOST'] }}:{{ g.config['REDIS_PORT'] }}</td>
                 </tr>
                 <tr>
                     <td>failed jobs</td>
@@ -35,7 +35,7 @@
                 </tr>
                 <tr>
                     <td>mappers</td>
-                    <td>42</td>
+                    <td>{{ g.server['mappers']|count }}</td>
                 </tr>
             </tbody>
         </table>
@@ -43,7 +43,7 @@
         <h2>keys owned by r³</h2>
         <h3>(All keys are actually prefixed with "r3:")</h3>
 
-        <table class="table table-striped table-bordered table-condensed">
+        <table class="keys table table-striped table-bordered table-condensed">
             <thead>
                 <tr>
                     <th>key name</th>
@@ -53,11 +53,15 @@
             </thead>
 
             <tbody>
-                {% for i in range(100) %}
+                {% for key in keys %}
                 <tr>
-                    <td>count-words::102301203321103023::output</td>
+                    <td>{{ key }}</td>
                     <td>string</td>
                     <td>1</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td class="no-keys" colspan="3">No keys owned by r³</td>
                 </tr>
                 {% endfor %}
             </tbody>
@@ -65,28 +69,14 @@
 
         <h2>redis.r3.globoi.com:20001</h2>
  
-        <table class="table table-striped table-bordered table-condensed">
+        <table class="redis table table-striped table-bordered table-condensed">
             <tbody>
+                {% for key, value in info.items() %}
                 <tr>
-                    <td>pubsub_channels</td>
-                    <td>0</td>
+                    <td class="key">{{ key }}</td>
+                    <td class="value">{{ value }}</td>
                 </tr>
-                <tr>
-                    <td>used_memory_peak_human</td>
-                    <td>168.22M</td>
-                </tr>
-                <tr>
-                    <td>bgrewriteaof_in_progress</td>
-                    <td>0</td>
-                </tr>
-                <tr>
-                    <td>connected_slaves</td>
-                    <td>0</td>
-                </tr>
-                <tr>
-                    <td>uptime_in_days</td>
-                    <td>52</td>
-                </tr>
+                {% endfor %}
             </tbody>
         </table>
     </div>

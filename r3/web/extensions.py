@@ -43,7 +43,7 @@ class RedisDB(object):
     def teardown(self, exception):
         ctx = stack.top
         if hasattr(ctx, 'redis_db'):
-            ctx.redis_db.close()
+            del ctx.redis_db
 
     @property
     def connection(self):
