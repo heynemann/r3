@@ -37,15 +37,18 @@
     {% block body %}
     {% endblock %}
     </div>
+
     <footer>
         <div class="cell">
             <a href="http://github.com/heynemann/r3" alt="r3 map reduce service">powered by r³ version {{ g.server['r3_version'] }}</a>
         </div>
     </footer>
+
     {% block js %}
     <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-1.7.2.min.js') }}" charset="utf-8"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap.min.js') }}" charset="utf-8"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/progress.js') }}" charset="utf-8"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/tabs.js') }}" charset="utf-8"></script>
     {% endblock %}
 </body>
 </html>

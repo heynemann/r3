@@ -299,3 +299,18 @@ footer a:hover {
     font-weight: bold;
     color: #aaa;
 }
+
+.stats .nav {
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.stats .nav a {
+    font-size: 13px;
+    text-decoration: none;
+    color: #4d7cb5;
+}
+
+.stats .nav a:hover {
+    text-decoration: underline;
+}

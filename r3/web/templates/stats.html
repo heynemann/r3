@@ -7,78 +7,87 @@
     <div class="stats section">
         <h1>Statistics</h1>
 
-        <div class="actions">
-            <button class="r3-stats btn btn-small btn-success">r³</button>
-            <button class="all-keys btn btn-small btn-info">all keys</button>
-            <button class="all-keys btn btn-small btn-info">redis</button>
+        <div class="tabbable">
+            <ul class="nav nav-tabs">
+                <li class="active"><a href="#tab1" data-toggle="tab">r³</a></li>
+                <li><a href="#tab2" data-toggle="tab">all keys</a></li>
+                <li><a href="#tab3" data-toggle="tab">redis</a></li>
+            </ul>
+
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab1">
+                    <h2>r³ info</h2>
+                    <table class="table table-striped table-bordered table-condensed">
+                        <tbody>
+                            <tr>
+                                <td>job-types</td>
+                                <td>{{ g.server['job_types']|count }}</td>
+                            </tr>
+                            <tr>
+                                <td>redis server</td>
+                                <td>{{ g.config['REDIS_HOST'] }}:{{ g.config['REDIS_PORT'] }}</td>
+                            </tr>
+                            <tr>
+                                <td>failed jobs</td>
+                                <td>120312</td>
+                            </tr>
+                            <tr>
+                                <td>processed</td>
+                                <td>481492</td>
+                            </tr>
+                            <tr>
+                                <td>mappers</td>
+                                <td>{{ g.server['mappers']|count }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane" id="tab2">
+                    <h2>keys owned by r³</h2>
+                    <h3>(All keys are actually prefixed with "r3:")</h3>
+
+                    <table class="keys table table-striped table-bordered table-condensed">
+                        <thead>
+                            <tr>
+                                <th>key name</th>
+                                <th class="type-col">type</th>
+                                <th>size</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            {% for key in keys %}
+                            <tr>
+                                <td>{{ key }}</td>
+                                <td>string</td>
+                                <td>1</td>
+                            </tr>
+                            {% else %}
+                            <tr>
+                                <td class="no-keys" colspan="3">No keys owned by r³</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="tab-pane" id="tab3">
+                    <h2>redis.r3.globoi.com:20001</h2>
+
+                    <table class="redis table table-striped table-bordered table-condensed">
+                        <tbody>
+                            {% for key, value in info.items() %}
+                            <tr>
+                                <td class="key">{{ key }}</td>
+                                <td class="value">{{ value }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-
-        <h2>r³</h2>
-
-        <table class="table table-striped table-bordered table-condensed">
-            <tbody>
-                <tr>
-                    <td>job-types</td>
-                    <td>{{ g.server['job_types']|count }}</td>
-                </tr>
-                <tr>
-                    <td>redis server</td>
-                    <td>{{ g.config['REDIS_HOST'] }}:{{ g.config['REDIS_PORT'] }}</td>
-                </tr>
-                <tr>
-                    <td>failed jobs</td>
-                    <td>120312</td>
-                </tr>
-                <tr>
-                    <td>processed</td>
-                    <td>481492</td>
-                </tr>
-                <tr>
-                    <td>mappers</td>
-                    <td>{{ g.server['mappers']|count }}</td>
-                </tr>
-            </tbody>
-        </table>
-
-        <h2>keys owned by r³</h2>
-        <h3>(All keys are actually prefixed with "r3:")</h3>
-
-        <table class="keys table table-striped table-bordered table-condensed">
-            <thead>
-                <tr>
-                    <th>key name</th>
-                    <th class="type-col">type</th>
-                    <th>size</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                {% for key in keys %}
-                <tr>
-                    <td>{{ key }}</td>
-                    <td>string</td>
-                    <td>1</td>
-                </tr>
-                {% else %}
-                <tr>
-                    <td class="no-keys" colspan="3">No keys owned by r³</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <h2>redis.r3.globoi.com:20001</h2>
- 
-        <table class="redis table table-striped table-bordered table-condensed">
-            <tbody>
-                {% for key, value in info.items() %}
-                <tr>
-                    <td class="key">{{ key }}</td>
-                    <td class="value">{{ value }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
     </div>
 </div>
 {% endblock %}
