@@ -29,7 +29,7 @@
             <tbody>
                 {% for job in g.jobs[job_type] %}
                 <tr>
-                    <td><a href="/jobs/{{ job }}">{{ job }}</a></td>
+                    <td>{{ job }}</td>
                     <td>Mapping</td>
                 </tr>
                 {% else %}
@@ -82,7 +82,7 @@
                 <tr>
                     <td>{{ mapper }}</td>
                     {% if status %}
-                    <td>Processing job <a href="/jobs/{{ status }}">{{ status }}</a></td>
+                    <td>Processing job {{ status['job_id'] }}</td>
                     {% else %}
                     <td>Waiting for a new job...</td>
                     {% endif %}

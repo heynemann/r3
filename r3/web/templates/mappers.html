@@ -28,7 +28,7 @@
                 <tr>
                     <td>{{ mapper }}</td>
                     {% if status %}
-                    <td>Processing job <a href="/jobs/{{ status }}">{{ status }}</a></td>
+                    <td>Processing job {{ status }}</td>
                     {% else %}
                     <td>Waiting for a new job...</td>
                     {% endif %}

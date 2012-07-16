@@ -13,7 +13,7 @@ from r3.app.app import R3ServiceApp
 
 def main(arguments=None):
     '''Runs r³ server with the specified arguments.'''
-    log_level = 'debug'
+    log_level = 'warning'
     port = int(arguments[1])
     ip = arguments[0]
 

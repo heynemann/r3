@@ -34,7 +34,7 @@ def get_mappers():
         if not working:
             mappers_status[mapper] = None
         else:
-            mappers_status[mapper] = working
+            mappers_status[mapper] = loads(working[0])
 
     return mappers_status
 
@@ -146,10 +146,6 @@ def delete_key(key):
     db.connection.delete(key)
     return redirect(url_for('stats'))
  
-@app.route("/jobs/<job_id>")
-def job(job_id):
-    return render_template('job.html', job_id=job_id)
-
 if __name__ == "__main__":
     app.config.from_object('r3.web.config')
     db = RedisDB(app)

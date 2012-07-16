@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import time
+import logging
 from uuid import uuid4
 from ujson import dumps, loads
 from datetime import datetime
@@ -35,49 +36,49 @@ class StreamHandler(BaseHandler):
         job_type_input_queue = JOB_TYPE_KEY % job_key
         self.redis.sadd(job_type_input_queue, str(job_id))
 
-        start = time.time()
-        input_stream = self.application.input_streams[job_key]
-        items = input_stream.process(arguments)
-        if hasattr(input_stream, 'group_size'):
-            items = self.group_items(items, input_stream.group_size)
-
-        mapper_input_queue = MAPPER_INPUT_KEY % job_key
-        mapper_output_queue = MAPPER_OUTPUT_KEY % (job_key, job_id)
-        mapper_error_queue = MAPPER_ERROR_KEY % job_key
-
-        with self.redis.pipeline() as pipe:
-            start = time.time()
-
-            for item in items:
-                msg = {
-                    'output_queue': mapper_output_queue,
-                    'job_id': str(job_id),
-                    'job_key': job_key,
-                    'item': item,
-                    'date': job_date.strftime(DATETIME_FORMAT),
-                    'retries': 0
-                }
-                pipe.rpush(mapper_input_queue, dumps(msg))
-            pipe.execute()
-        print "input queue took %.2f" % (time.time() - start)
-
-        start = time.time()
-        results = []
-        errored = False
-        while (len(results) < len(items)):
-            key, item = self.redis.blpop(mapper_output_queue)
-            json_item = loads(item)
-            if 'error' in json_item:
-                json_item['retries'] -= 1
-                self.redis.hset(mapper_error_queue, json_item['job_id'], dumps(json_item))
-                errored = True
-                break
-            results.append(loads(json_item['result']))
-
-        self.redis.delete(mapper_output_queue)
-        print "map took %.2f" % (time.time() - start)
-
         try:
+            start = time.time()
+            input_stream = self.application.input_streams[job_key]
+            items = input_stream.process(arguments)
+            if hasattr(input_stream, 'group_size'):
+                items = self.group_items(items, input_stream.group_size)
+
+            mapper_input_queue = MAPPER_INPUT_KEY % job_key
+            mapper_output_queue = MAPPER_OUTPUT_KEY % (job_key, job_id)
+            mapper_error_queue = MAPPER_ERROR_KEY % job_key
+
+            with self.redis.pipeline() as pipe:
+                start = time.time()
+
+                for item in items:
+                    msg = {
+                        'output_queue': mapper_output_queue,
+                        'job_id': str(job_id),
+                        'job_key': job_key,
+                        'item': item,
+                        'date': job_date.strftime(DATETIME_FORMAT),
+                        'retries': 0
+                    }
+                    pipe.rpush(mapper_input_queue, dumps(msg))
+                pipe.execute()
+            logging.debug("input queue took %.2f" % (time.time() - start))
+
+            start = time.time()
+            results = []
+            errored = False
+            while (len(results) < len(items)):
+                key, item = self.redis.blpop(mapper_output_queue)
+                json_item = loads(item)
+                if 'error' in json_item:
+                    json_item['retries'] -= 1
+                    self.redis.hset(mapper_error_queue, json_item['job_id'], dumps(json_item))
+                    errored = True
+                    break
+                results.append(loads(json_item['result']))
+
+            self.redis.delete(mapper_output_queue)
+            logging.debug("map took %.2f" % (time.time() - start))
+
             if errored:
                 self.redis.incr(PROCESSED)
                 self.redis.incr(PROCESSED_FAILED)
@@ -86,7 +87,7 @@ class StreamHandler(BaseHandler):
                 start = time.time()
                 reducer = self.application.reducers[job_key]
                 result = reducer.reduce(results)
-                print "reduce took %.2f" % (time.time() - start)
+                logging.debug("reduce took %.2f" % (time.time() - start))
 
                 self.set_header('Content-Type', 'application/json')
 
