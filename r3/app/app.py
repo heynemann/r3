@@ -15,7 +15,7 @@ class R3ServiceApp(tornado.web.Application):
 
         handlers = [
             (r'/healthcheck', HealthcheckHandler),
-            (r'/stream', StreamHandler),
+            (r'/stream/(?P<job_key>.+)/?', StreamHandler),
         ]
 
         self.redis.delete('r3::mappers')

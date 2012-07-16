@@ -27,9 +27,8 @@ class StreamHandler(BaseHandler):
         return items
 
     @tornado.web.asynchronous
-    def get(self):
+    def get(self, job_key):
         arguments = self.request.arguments
-        job_key = arguments['key'][0]
         job_id = uuid4()
         job_date = datetime.now()
 

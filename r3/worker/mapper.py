@@ -6,6 +6,7 @@ import signal
 import logging
 import sys
 import os
+import argparse
 
 import redis
 from ujson import loads, dumps
@@ -23,12 +24,12 @@ class TimeoutError(JobError):
     pass
 
 class Mapper:
-    def __init__(self, key, process_name, redis_host, redis_port, redis_db, redis_pass):
-        self.mapper_key = key
-        self.process_name = process_name
-        self.full_name = '%s::%s' % (self.mapper_key, self.process_name)
+    def __init__(self, job_type, mapper_key, redis_host, redis_port, redis_db, redis_pass):
+        self.job_type = job_type
+        self.mapper_key = mapper_key
+        self.full_name = '%s::%s' % (self.job_type, self.mapper_key)
         self.timeout = None
-        self.input_queue = MAPPER_INPUT_KEY % self.mapper_key
+        self.input_queue = MAPPER_INPUT_KEY % self.job_type
         self.working_queue = MAPPER_WORKING_KEY % self.full_name
         self.max_retries = 5
 
@@ -82,7 +83,7 @@ class Mapper:
 
     def ping(self):
         self.redis.delete(MAPPER_WORKING_KEY % self.full_name)
-        self.redis.sadd(JOB_TYPES_KEY, self.mapper_key)
+        self.redis.sadd(JOB_TYPES_KEY, self.job_type)
         self.redis.sadd(MAPPERS_KEY, self.full_name)
         self.redis.set(LAST_PING_KEY % self.full_name, datetime.now().strftime(DATETIME_FORMAT))
 
@@ -96,6 +97,43 @@ class Mapper:
         self.redis.delete(self.working_queue)
         self.redis.delete('r3::mappers::%s::working' % self.full_name)
 
+def kls_import(fullname):
+    name_parts = fullname.split('.')
+    klass_name = name_parts[-1]
+    module_parts = name_parts[:-1]
+    module = reduce(getattr, module_parts[1:], __import__('.'.join(module_parts)))
+    klass = getattr(module, klass_name)
+    return klass
+
+def main(arguments):
+    parser = argparse.ArgumentParser(description='runs the application that processes stream requests for r³')
+    parser.add_argument('-l', '--loglevel', type=str, default='warning', help='the log level that r³ will run under')
+    parser.add_argument('--redis-host', type=str, default='0.0.0.0', help='the ip that r³ will use to connect to redis')
+    parser.add_argument('--redis-port', type=int, default=6379, help='the port that r³ will use to connect to redis')
+    parser.add_argument('--redis-db', type=int, default=0, help='the database that r³ will use to connect to redis')
+    parser.add_argument('--redis-pass', type=str, default='', help='the password that r³ will use to connect to redis')
+    parser.add_argument('--job-type', type=str, help='the job-type for this mapper', required=True)
+    parser.add_argument('--mapper-key', type=str, help='the unique identifier for this mapper', required=True)
+    parser.add_argument('--mapper-class', type=str, help='the fullname of the class that this mapper will run', required=True)
+
+    args = parser.parse_args(arguments)
+
+    logging.basicConfig(level=getattr(logging, args.loglevel.upper()))
+
+    try:
+        klass = kls_import(args.mapper_class)
+    except Exception, err:
+        print "Could not import the specified %s class. Error: %s" % (args.mapper_class, err)
+        raise
+
+    mapper = klass(args.job_type, args.mapper_key, redis_host=args.redis_host, redis_port=args.redis_port, redis_db=args.redis_db, redis_pass=args.redis_pass)
+    try:
+        mapper.run_block()
+    except KeyboardInterrupt:
+        print
+        print "-- r³ mapper closed by user interruption --"
+
+
+
 if __name__ == '__main__':
-    mapper = Mapper("generic-mapper", redis_host=sys.argv[1], redis_port=int(sys.argv[2]), redis_db=0, redis_pass='r3')
-    mapper.run_block()
+    main(sys.argv[1:])
