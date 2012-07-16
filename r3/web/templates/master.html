@@ -26,7 +26,7 @@
                     </ul>
                 </nav>
                 <aside>
-                <p>r³ service status: <span class="running">{{ g.server['r3_service_status'] }}</span> :: active mappers: <span class="active-workers">{{ g.server['mappers']|count }}</span> :: available job types: <span class="active-job-types">{{ g.server['job_types']|count }}</span></p>
+                <p>r³ service status: <span class="running">{{ g.server['r3_service_status'] }}</span> :: active mappers: <span class="active-workers">{{ g.mappers|count }}</span> :: available job types: <span class="active-job-types">{{ g.job_types|count }}</span></p>
                     <p>running on <span class="redis-url">{{ g.config['WEB_HOST'] }}:{{ g.config['WEB_PORT'] }}</span> connected to Redis on <span class="redis-url">{{ g.config['REDIS_HOST'] }}:{{ g.config['REDIS_PORT'] }}</span></p>
                 </aside>
 

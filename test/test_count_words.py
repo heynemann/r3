@@ -8,7 +8,7 @@ from count_words_reducer import CountWordsReducer
 
 class CountWordsMapper:
     def map(self, lines):
-        time.sleep(0.5)
+        #time.sleep(0.5)
         return list(self.split_words(lines))
 
     def split_words(self, lines):

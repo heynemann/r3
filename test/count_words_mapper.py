@@ -4,11 +4,11 @@
 import sys
 import time
 
-from r3.worker.mapper import SafeMapper
+from r3.worker.mapper import Mapper
 
-class CountWordsMapper(SafeMapper):
+class CountWordsMapper(Mapper):
     def map(self, lines):
-        time.sleep(0.5)
+        #time.sleep(0.5)
         return list(self.split_words(lines))
 
     def split_words(self, lines):

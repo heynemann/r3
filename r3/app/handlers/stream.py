@@ -11,8 +11,20 @@ import tornado.gen
 
 from r3.app.handlers import BaseHandler
 from r3.app.utils import DATETIME_FORMAT
+from r3.app.keys import PROCESSED, PROCESSED_FAILED, PROCESSED_SUCCESS, JOB_TYPE_KEY, MAPPER_INPUT_KEY, MAPPER_OUTPUT_KEY, MAPPER_ERROR_KEY
 
 class StreamHandler(BaseHandler):
+    def group_items(self, stream_items, group_size):
+        items = []
+        current_item = []
+        items.append(current_item)
+        for stream_item in stream_items:
+            if len(current_item) == group_size:
+                current_item = []
+                items.append(current_item)
+            current_item.append(stream_item)
+        return items
+
     @tornado.web.asynchronous
     def get(self):
         arguments = self.request.arguments
@@ -20,21 +32,18 @@ class StreamHandler(BaseHandler):
         job_id = uuid4()
         job_date = datetime.now()
 
-        #mapper_input_queue = 'r3::jobs::%s::input' % job_key
-        #self.redis.delete(mapper_input_queue)
-        #return
-
-        job_type_input_queue = 'r3::job-types::%s' % job_key
+        job_type_input_queue = JOB_TYPE_KEY % job_key
         self.redis.sadd(job_type_input_queue, str(job_id))
 
         start = time.time()
         input_stream = self.application.input_streams[job_key]
         items = input_stream.process(arguments)
-        print "input stream took %.2f" % (time.time() - start)
+        if hasattr(input_stream, 'group_size'):
+            items = self.group_items(items, input_stream.group_size)
 
-        mapper_input_queue = 'r3::jobs::%s::input' % job_key
-        mapper_output_queue = 'r3::jobs::%s::%s::output' % (job_key, job_id)
-        mapper_error_queue = 'r3::jobs::%s::errors' % job_key
+        mapper_input_queue = MAPPER_INPUT_KEY % job_key
+        mapper_output_queue = MAPPER_OUTPUT_KEY % (job_key, job_id)
+        mapper_error_queue = MAPPER_ERROR_KEY % job_key
 
         with self.redis.pipeline() as pipe:
             start = time.time()
@@ -70,6 +79,8 @@ class StreamHandler(BaseHandler):
 
         try:
             if errored:
+                self.redis.incr(PROCESSED)
+                self.redis.incr(PROCESSED_FAILED)
                 self._error(500, 'Mapping failed. Check the error queue.')
             else:
                 start = time.time()
@@ -81,6 +92,9 @@ class StreamHandler(BaseHandler):
 
                 self.write(dumps(result))
 
+                self.redis.incr(PROCESSED)
+                self.redis.incr(PROCESSED_SUCCESS)
+ 
                 self.finish()
         finally:
             self.redis.srem(job_type_input_queue, str(job_id))

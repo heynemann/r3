@@ -21,7 +21,7 @@
                         <tbody>
                             <tr>
                                 <td>job-types</td>
-                                <td>{{ g.server['job_types']|count }}</td>
+                                <td>{{ g.job_types|count }}</td>
                             </tr>
                             <tr>
                                 <td>redis server</td>
@@ -29,15 +29,15 @@
                             </tr>
                             <tr>
                                 <td>failed jobs</td>
-                                <td>120312</td>
+                                <td>{{ failed }}</td>
                             </tr>
                             <tr>
                                 <td>processed</td>
-                                <td>481492</td>
+                                <td>{{ processed }}</td>
                             </tr>
                             <tr>
                                 <td>mappers</td>
-                                <td>{{ g.server['mappers']|count }}</td>
+                                <td>{{ g.mappers|count }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -53,15 +53,17 @@
                                 <th>key name</th>
                                 <th class="type-col">type</th>
                                 <th>size</th>
+                                <th></th>
                             </tr>
                         </thead>
 
                         <tbody>
                             {% for key in keys %}
                             <tr>
-                                <td>{{ key['name'] }}</td>
-                                <td>{{ key['type'] }}</td>
-                                <td>{{ key['size'] }}</td>
+                                <td><a href="/stats/keys/{{ key['name'] }}">{{ key['name'] }}</a></td>
+                                <td><a href="/stats/keys/{{ key['name'] }}">{{ key['type'] }}</a></td>
+                                <td><a href="/stats/keys/{{ key['name'] }}">{{ key['size'] }}</a></td>
+                                <td class="delete"><a href="/stats/keys/{{ key['name'] }}/delete" class="delete btn btn-small btn-danger">delete</a></td>
                             </tr>
                             {% else %}
                             <tr>

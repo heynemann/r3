@@ -1,0 +1,28 @@
+{% extends "master.html" %}
+
+{% block title %} - Overview{% endblock %}
+
+{%  block css %}
+    {{ super() }}
+    <style>
+        {{ styles|safe }}
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container main">
+    <div class="show-key stats section">
+        <h1><a href="/stats">Statistics</a> - {{ key }}</h1>
+
+        {% if multi %}
+        <ul>
+            {% for v in value %}
+            <li><pre><code>{{ v|safe }}</code></pre></li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <pre><code>{{ value|safe }}</code></pre>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
