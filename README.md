@@ -215,7 +215,11 @@ Some screenshots of the monitoring application:
 
 ![r³ web monitoring interface](https://github.com/heynemann/r3/raw/master/r3-web-1.jpg)
 
+Failed jobs monitoring:
+
 ![r³ web monitoring interface](https://github.com/heynemann/r3/raw/master/r3-web-2.jpg)
+
+Stats:
 
 ![r³ web monitoring interface](https://github.com/heynemann/r3/raw/master/r3-web-3.jpg)
 
