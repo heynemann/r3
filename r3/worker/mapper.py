@@ -97,7 +97,10 @@ class Mapper:
         self.redis.delete(self.working_queue)
         self.redis.delete('r3::mappers::%s::working' % self.full_name)
 
-def main(arguments):
+def main(arguments=None):
+    if not arguments:
+        arguments = sys.argv
+
     parser = argparse.ArgumentParser(description='runs the application that processes stream requests for r³')
     parser.add_argument('-l', '--loglevel', type=str, default='warning', help='the log level that r³ will run under')
     parser.add_argument('--redis-host', type=str, default='0.0.0.0', help='the ip that r³ will use to connect to redis')
