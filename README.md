@@ -8,4 +8,4 @@ r³ has only three concepts to grasp: input streams, mappers and reducers.
 
 The diagram below relates how they interact:
 
-![Alt text](/r3.png)
+![r³ components interaction](r3.png)
