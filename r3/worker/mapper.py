@@ -99,7 +99,7 @@ class Mapper:
 
 def main(arguments=None):
     if not arguments:
-        arguments = sys.argv
+        arguments = sys.argv[1:]
 
     parser = argparse.ArgumentParser(description='runs the application that processes stream requests for r³')
     parser.add_argument('-l', '--loglevel', type=str, default='warning', help='the log level that r³ will run under')
