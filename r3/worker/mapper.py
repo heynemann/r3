@@ -128,6 +128,5 @@ def main(arguments):
         print "-- r³ mapper closed by user interruption --"
 
 
-
 if __name__ == '__main__':
     main(sys.argv[1:])

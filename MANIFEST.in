@@ -1,0 +1,12 @@
+prune dist
+prune build
+prune test
+recursive-include r3 *.py
+recursive-include r3 *.gif
+recursive-include r3 *.png
+recursive-include r3 *.jpg
+recursive-include r3 *.jpeg
+recursive-include r3 *.html
+recursive-include r3 *.htm
+recursive-include r3 *.js
+recursive-include r3 *.css
