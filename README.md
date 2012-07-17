@@ -39,18 +39,34 @@ To run `r3-app`, given the above redis back-end, type:
 
     r3-app --redis-port=7778 --redis-pass=r3 -c config.py
 
-The `config.py` argument tells r³ which `input stream processors` and
-`reducers` should be enabled.
-
 We'll learn more about the configuration file below.
 
 Given that you have a proper configuration file, your r3 service will be
 available at `http://localhost:8888`.
 
 As to how we actually perform a map-reduce operation, we'll see that after the
-`mapper` section.
+`Running Mappers` section.
+
+App Configuration
+-----------------
+
+In the above section we specified a file called `config.py` as configuration.
+Now we'll see what that file contains.
+
+The configuration file that we pass to the `r3-app` command is responsible for
+specifying `input stream processors` and `reducers` that should be enabled.
+
+Let's see a sample configuration file:
+
+    INPUT_STREAMS = [
+        'test.count_words_stream.CountWordsStream'
+    ]
+
+    REDUCERS = [
+        'test.count_words_reducer.CountWordsReducer'
+    ]
 
 Running Mappers
 ---------------
 
-
+As you
