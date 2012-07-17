@@ -153,7 +153,28 @@ mapper has with a specific input stream and with a specific reducer.
 Reducing
 --------
 
+After all input streams have been mapped, it is time to reduce our data to one
+coherent value. This is what the reducer does.
+
+In the case of counting word occurrences, a sample implementation is as
+follows:
+
+    from collections import defaultdict
+
+    class CountWordsReducer:
+        job_type = 'count-words'
+
+        def reduce(self, app, items):
+            word_freq = defaultdict(int)
+            for line in items:
+                for word, frequency in line:
+                    word_freq[word] += frequency
+
+            return word_freq
+
 The `job_type` property is required and specifies the relationship that this
 reducer has with mappers and with a specific input stream.
 
+This reducer will return a dictionary that contains all the words and the
+frequency with which they occur in the given file.
 
