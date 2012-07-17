@@ -4,7 +4,9 @@
 from collections import defaultdict
 
 class CountWordsReducer:
-    def reduce(self, items):
+    job_type = 'count-words'
+
+    def reduce(self, app, items):
         word_freq = defaultdict(int)
         for line in items:
             for word, frequency in line:

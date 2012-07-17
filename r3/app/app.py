@@ -6,12 +6,14 @@ import tornado.ioloop
 
 from r3.app.handlers.healthcheck import HealthcheckHandler
 from r3.app.handlers.stream import StreamHandler
+from r3.app.utils import kls_import
 
 class R3ServiceApp(tornado.web.Application):
 
-    def __init__(self, redis, log_level):
+    def __init__(self, redis, config, log_level):
         self.redis = redis
         self.log_level = log_level
+        self.config = config
 
         handlers = [
             (r'/healthcheck', HealthcheckHandler),
@@ -28,15 +30,15 @@ class R3ServiceApp(tornado.web.Application):
     def load_input_streams(self):
         self.input_streams = {}
 
-        stream = __import__('count_words_stream')
-
-        self.input_streams['count-words'] = stream.CountWordsStream()
+        for stream_class in self.config.INPUT_STREAMS:
+            stream = kls_import(stream_class)
+            self.input_streams[stream.job_type] = stream()
 
     def load_reducers(self):
         self.reducers = {}
 
-        reducer = __import__('count_words_reducer')
-
-        self.reducers['count-words'] = reducer.CountWordsReducer()
+        for reducer_class in self.config.REDUCERS:
+            reducer = kls_import(reducer_class)
+            self.reducers[reducer.job_type] = reducer()
 
 

@@ -27,3 +27,15 @@ def flush_dead_mappers(redis, mappers_key, ping_key):
                 redis.delete(ping_key % mapper)
 
 
+def kls_import(fullname):
+    if not '.' in fullname:
+        return __import__(fullname)
+
+    name_parts = fullname.split('.')
+    klass_name = name_parts[-1]
+    module_parts = name_parts[:-1]
+    module = reduce(getattr, module_parts[1:], __import__('.'.join(module_parts)))
+    klass = getattr(module, klass_name)
+    return klass
+
+

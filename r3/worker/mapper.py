@@ -11,7 +11,7 @@ import argparse
 import redis
 from ujson import loads, dumps
 
-from r3.app.utils import DATETIME_FORMAT
+from r3.app.utils import DATETIME_FORMAT, kls_import
 from r3.app.keys import MAPPERS_KEY, JOB_TYPES_KEY, MAPPER_INPUT_KEY, MAPPER_WORKING_KEY, LAST_PING_KEY
 
 class JobError(RuntimeError):
@@ -97,14 +97,6 @@ class Mapper:
         self.redis.delete(self.working_queue)
         self.redis.delete('r3::mappers::%s::working' % self.full_name)
 
-def kls_import(fullname):
-    name_parts = fullname.split('.')
-    klass_name = name_parts[-1]
-    module_parts = name_parts[:-1]
-    module = reduce(getattr, module_parts[1:], __import__('.'.join(module_parts)))
-    klass = getattr(module, klass_name)
-    return klass
-
 def main(arguments):
     parser = argparse.ArgumentParser(description='runs the application that processes stream requests for r³')
     parser.add_argument('-l', '--loglevel', type=str, default='warning', help='the log level that r³ will run under')
@@ -112,11 +104,13 @@ def main(arguments):
     parser.add_argument('--redis-port', type=int, default=6379, help='the port that r³ will use to connect to redis')
     parser.add_argument('--redis-db', type=int, default=0, help='the database that r³ will use to connect to redis')
     parser.add_argument('--redis-pass', type=str, default='', help='the password that r³ will use to connect to redis')
-    parser.add_argument('--job-type', type=str, help='the job-type for this mapper', required=True)
     parser.add_argument('--mapper-key', type=str, help='the unique identifier for this mapper', required=True)
     parser.add_argument('--mapper-class', type=str, help='the fullname of the class that this mapper will run', required=True)
 
     args = parser.parse_args(arguments)
+
+    if not args.mapper_key:
+        raise RuntimeError('The --mapper_key argument is required.')
 
     logging.basicConfig(level=getattr(logging, args.loglevel.upper()))
 
@@ -126,7 +120,7 @@ def main(arguments):
         print "Could not import the specified %s class. Error: %s" % (args.mapper_class, err)
         raise
 
-    mapper = klass(args.job_type, args.mapper_key, redis_host=args.redis_host, redis_port=args.redis_port, redis_db=args.redis_db, redis_pass=args.redis_pass)
+    mapper = klass(klass.job_type, args.mapper_key, redis_host=args.redis_host, redis_port=args.redis_port, redis_db=args.redis_db, redis_pass=args.redis_pass)
     try:
         mapper.run_block()
     except KeyboardInterrupt:

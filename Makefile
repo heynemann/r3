@@ -1,11 +1,11 @@
 # %%%%%%%%%%%%%% SERVICE %%%%%%%%%%%%%%
 run:
-	@PYTHONPATH=$$PYTHONPATH:.:./test python r3/app/server.py --redis-port=7778 --redis-pass=r3
+	@PYTHONPATH=$$PYTHONPATH:.:./test python r3/app/server.py --redis-port=7778 --redis-pass=r3 --config-file="./test/app_config.py"
 
 
 # %%%%%%%%%%%%%% WORKER %%%%%%%%%%%%%%
 worker:
-	@PYTHONPATH=$$PYTHONPATH:. python r3/worker/mapper.py --job-type="count-words" --mapper-key="${KEY}" --mapper-class="test.count_words_mapper.CountWordsMapper" --redis-port=7778 --redis-pass=r3
+	@PYTHONPATH=$$PYTHONPATH:. python r3/worker/mapper.py --mapper-key="${KEY}" --mapper-class="test.count_words_mapper.CountWordsMapper" --redis-port=7778 --redis-pass=r3
 
 
 # %%%%%%%%%%%%%% WEB %%%%%%%%%%%%%%

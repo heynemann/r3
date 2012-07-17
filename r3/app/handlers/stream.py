@@ -38,7 +38,7 @@ class StreamHandler(BaseHandler):
         try:
             start = time.time()
             input_stream = self.application.input_streams[job_key]
-            items = input_stream.process(arguments)
+            items = input_stream.process(self.application, arguments)
             if hasattr(input_stream, 'group_size'):
                 items = self.group_items(items, input_stream.group_size)
 
@@ -85,7 +85,7 @@ class StreamHandler(BaseHandler):
             else:
                 start = time.time()
                 reducer = self.application.reducers[job_key]
-                result = reducer.reduce(results)
+                result = reducer.reduce(self.application, results)
                 logging.debug("reduce took %.2f" % (time.time() - start))
 
                 self.set_header('Content-Type', 'application/json')

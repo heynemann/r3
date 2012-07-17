@@ -10,6 +10,7 @@ from tornado.httpserver import HTTPServer
 import redis
 
 from r3.app.app import R3ServiceApp
+from r3.app.config import Config
 
 
 def main(arguments=None):
@@ -23,14 +24,17 @@ def main(arguments=None):
     parser.add_argument('--redis-port', type=int, default=6379, help='the port that r³ will use to connect to redis')
     parser.add_argument('--redis-db', type=int, default=0, help='the database that r³ will use to connect to redis')
     parser.add_argument('--redis-pass', type=str, default='', help='the password that r³ will use to connect to redis')
+    parser.add_argument('-c', '--config-file', type=str, help='the config file that r³ will use to load input stream classes and reducers', required=True)
 
     args = parser.parse_args(arguments)
+
+    cfg = Config(args.config_file)
 
     c = redis.StrictRedis(host=args.redis_host, port=args.redis_port, db=args.redis_db, password=args.redis_pass)
 
     logging.basicConfig(level=getattr(logging, args.loglevel.upper()))
 
-    application = R3ServiceApp(redis=c, log_level=args.loglevel.upper())
+    application = R3ServiceApp(redis=c, config=cfg, log_level=args.loglevel.upper())
 
     server = HTTPServer(application)
     server.bind(args.port, args.bind)
