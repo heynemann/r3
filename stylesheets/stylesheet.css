@@ -75,8 +75,9 @@ header {
 header h1 {
   letter-spacing: -1px;
   font-size: 72px;
-  color: #fff;
+  color: transparent;
   background: url(../images/logo.png) 0 0 no-repeat;
+  text-indent: -99999px;
   line-height: 1;
   margin-bottom: 0.2em;
   width: 540px;
