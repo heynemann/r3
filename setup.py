@@ -40,7 +40,8 @@ r3 is a map-reduce engine that uses redis as a backend. It's very simple to use.
         'tornado',
         'ujson',
         'flask',
-        'argparse'
+        'argparse',
+        'hiredis'
     ],
 
     entry_points = {
