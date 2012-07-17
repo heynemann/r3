@@ -23,8 +23,8 @@ Installing r³ is as easy as:
 After successful installation, you'll have three new commands: `r3-app`,
 `r3-map` and `r3-web`.
 
-Running
--------
+Running the App
+---------------
 
 In order to use r³ you must have a redis database running. Getting one up in
 your system is beyond the scope of this document.
@@ -50,5 +50,7 @@ available at `http://localhost:8888`.
 As to how we actually perform a map-reduce operation, we'll see that after the
 `mapper` section.
 
+Running Mappers
+---------------
 
 
