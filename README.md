@@ -178,3 +178,44 @@ reducer has with mappers and with a specific input stream.
 This reducer will return a dictionary that contains all the words and the
 frequency with which they occur in the given file.
 
+Testing our Solution
+-------------------
+
+To test the above solution, just clone r³'s repository and run the commands
+from the directory you just cloned.
+
+Given that we have the above working, we should have `r3-app` running at
+`http://localhost:8888`. In order to access our `count-words` job we'll point
+our browser to:
+
+    http://localhost:8888/count-words
+
+This should return a JSON document with the resulting occurrences of words in
+the sample document.
+
+Creating my own Reducers
+------------------------
+
+As you have probably guessed, creating new jobs of mapping and reducing is as
+simple as implementing your own `input stream processor`, `mapper` and
+`reducer`.
+
+After they are implemented, just include the processor and reducer in the
+config file and fire up as many mappers as you want.
+
+Monitoring r³
+-------------
+
+We talked about three available commands: `r3-app`, `r3-map` and `r3-web`.
+
+The last one fires up a monitoring interface that helps you in understanding
+how your r³ farm is working.
+
+Some screenshots of the monitoring application:
+
+![r³ web monitoring interface](https://github.com/heynemann/r3/raw/master/r3-web-1.jpg)
+
+![r³ web monitoring interface](https://github.com/heynemann/r3/raw/master/r3-web-2.jpg)
+
+![r³ web monitoring interface](https://github.com/heynemann/r3/raw/master/r3-web-3.jpg)
+
