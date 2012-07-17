@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href='https://fonts.googleapis.com/css?family=Architects+Daughter' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <title>R3 by heynemann</title>
+  </head>
+
+  <body>
+    <header>
+      <div class="inner">
+        <h1>R3</h1>
+        <h2>r³ is a map-reduce engine written in python using redis as a backend</h2>
+        <a href="https://github.com/heynemann/r3" class="button"><small>View project on</small>GitHub</a>
+      </div>
+    </header>
+
+    <div id="content-wrapper">
+      <div class="inner clearfix">
+        <section id="main-content">
+          <h1>r³</h1>
+
+<p>r³ is a map reduce engine written in python using a redis backend. It's purpose
+is to be simple.</p>
+
+<p>r³ has only three concepts to grasp: input streams, mappers and reducers.</p>
+
+<p>The diagram below relates how they interact:</p>
+
+<p><img src="https://github.com/heynemann/r3/raw/master/r3.png" alt="r³ components interaction"></p>
+
+<p>If the diagram above is a little too much to grasp right now, don't worry. Keep
+reading and use this diagram later for reference.</p>
+
+<p>A fairly simple map-reduce example to solve is counting the number of
+occurrences of each word in an extensive document. We'll use this scenario as
+our example.</p>
+
+<h2>Installing</h2>
+
+<p>Installing r³ is as easy as:</p>
+
+<pre><code>pip install r3
+</code></pre>
+
+<p>After successful installation, you'll have three new commands: <code>r3-app</code>,
+<code>r3-map</code> and <code>r3-web</code>.</p>
+
+<h2>Running the App</h2>
+
+<p>In order to use r³ you must have a redis database running. Getting one up in
+your system is beyond the scope of this document.</p>
+
+<p>We'll assume you have one running at 127.0.0.1, port 7778 and configured to
+require the password 'r3' using database 0.</p>
+
+<p>The service that is at the heart of r³ is <code>r3-app</code>. It is the web-server that
+will receive requests for map-reduce jobs and return the results.</p>
+
+<p>To run <code>r3-app</code>, given the above redis back-end, type:</p>
+
+<pre><code>r3-app --redis-port=7778 --redis-pass=r3 -c config.py
+</code></pre>
+
+<p>We'll learn more about the configuration file below.</p>
+
+<p>Given that you have a proper configuration file, your r3 service will be
+available at <code>http://localhost:8888</code>.</p>
+
+<p>As to how we actually perform a map-reduce operation, we'll see that after the
+<code>Running Mappers</code> section.</p>
+
+<h2>App Configuration</h2>
+
+<p>In the above section we specified a file called <code>config.py</code> as configuration.
+Now we'll see what that file contains.</p>
+
+<p>The configuration file that we pass to the <code>r3-app</code> command is responsible for
+specifying <code>input stream processors</code> and <code>reducers</code> that should be enabled.</p>
+
+<p>Let's see a sample configuration file:</p>
+
+<pre><code>INPUT_STREAMS = [
+    'test.count_words_stream.CountWordsStream'
+]
+
+REDUCERS = [
+    'test.count_words_reducer.CountWordsReducer'
+]
+</code></pre>
+
+<p>This configuration specifies that there should be a <code>CountWordsStream</code> input
+stream processor and a <code>CountWordsReducer</code> reducer. Both will be used by the
+<code>stream</code> service to perform a map-reduce operation. </p>
+
+<p>We'll learn more about <code>input streams</code> and <code>reducers</code> in the sections below.</p>
+
+<h2>The input stream</h2>
+
+<p>The input stream processor is the class responsible for creating the input
+streams upon which the mapping will occur.</p>
+
+<p>In our counting words in a document sample, the input stream processor class
+should open the document, read the lines in the document and then return each
+line to <code>r3-app</code>.</p>
+
+<p>Let's see a possible implementation:</p>
+
+<pre><code>from os.path import abspath, dirname, join
+
+class CountWordsStream:
+    job_type = 'count-words'
+    group_size = 1000
+
+    def process(self, app, arguments):
+        with open(abspath(join(dirname(__file__), 'chekhov.txt'))) as f:
+            contents = f.readlines()
+
+        return [line.lower() for line in contents]
+</code></pre>
+
+<p>The <code>job_type</code> property is required and specifies the relationship that this
+input stream has with mappers and with a specific reducer.</p>
+
+<p>The <code>group_size</code> property specifies how big is an input stream. In the above
+example, our input stream processor returns all the lines in the document, but
+r³ will group the resulting lines in batches of 1000 lines to be processed by
+each mapper. How big is your group size varies wildly depending on what your
+mapping consists of.</p>
+
+<h2>Running Mappers</h2>
+
+<p><code>Input stream processors</code> and <code>reducers</code> are sequential and thus run in-process
+in the r³ app. Mappers, on the other hand, are inherently parallel and are run
+on their own as independent worker units.</p>
+
+<p>Considering the above example of input stream and reducer, we'll use a
+<code>CountWordsMapper</code> class to run our mapper.</p>
+
+<p>We can easily start the mapper with:</p>
+
+<pre><code>r3-map --redis-port=7778 --redis-pass=r3 --mapper-key=mapper-1 --mapper-class="test.count_words_mapper.CountWordsMapper"
+</code></pre>
+
+<p>The <code>redis-port</code> and <code>redis-pass</code> arguments require no further explanation.</p>
+
+<p>The <code>mapper-key</code> argument specifies a unique key for this mapper. This key 
+should be the same once this mapper restarts.</p>
+
+<p>The <code>mapper-class</code> is the class r³ will use to map input streams.</p>
+
+<p>Let's see what this map class looks like. If we are mapping lines (what we got
+out of the input stream steap), we should return each word and how many times
+it occurs.</p>
+
+<pre><code>from r3.worker.mapper import Mapper
+
+class CountWordsMapper(Mapper):
+    job_type = 'count-words'
+
+    def map(self, lines):
+        return list(self.split_words(lines))
+
+    def split_words(self, lines):
+        for line in lines:
+            for word in line.split():
+                yield word, 1
+</code></pre>
+
+<p>The <code>job_type</code> property is required and specifies the relationship that this
+mapper has with a specific input stream and with a specific reducer.</p>
+
+<h2>Reducing</h2>
+
+<p>After all input streams have been mapped, it is time to reduce our data to one
+coherent value. This is what the reducer does.</p>
+
+<p>In the case of counting word occurrences, a sample implementation is as
+follows:</p>
+
+<pre><code>from collections import defaultdict
+
+class CountWordsReducer:
+    job_type = 'count-words'
+
+    def reduce(self, app, items):
+        word_freq = defaultdict(int)
+        for line in items:
+            for word, frequency in line:
+                word_freq[word] += frequency
+
+        return word_freq
+</code></pre>
+
+<p>The <code>job_type</code> property is required and specifies the relationship that this
+reducer has with mappers and with a specific input stream.</p>
+
+<p>This reducer will return a dictionary that contains all the words and the
+frequency with which they occur in the given file.</p>
+
+<h2>Testing our Solution</h2>
+
+<p>To test the above solution, just clone r³'s repository and run the commands
+from the directory you just cloned.</p>
+
+<p>Given that we have the above working, we should have <code>r3-app</code> running at
+<code>http://localhost:8888</code>. In order to access our <code>count-words</code> job we'll point
+our browser to:</p>
+
+<pre><code>http://localhost:8888/count-words
+</code></pre>
+
+<p>This should return a JSON document with the resulting occurrences of words in
+the sample document.</p>
+
+<h2>Creating my own Reducers</h2>
+
+<p>As you have probably guessed, creating new jobs of mapping and reducing is as
+simple as implementing your own <code>input stream processor</code>, <code>mapper</code> and
+<code>reducer</code>.</p>
+
+<p>After they are implemented, just include the processor and reducer in the
+config file and fire up as many mappers as you want.</p>
+
+<h2>Monitoring r³</h2>
+
+<p>We talked about three available commands: <code>r3-app</code>, <code>r3-map</code> and <code>r3-web</code>.</p>
+
+<p>The last one fires up a monitoring interface that helps you in understanding
+how your r³ farm is working.</p>
+
+<p>Some screenshots of the monitoring application:</p>
+
+<p><img src="https://github.com/heynemann/r3/raw/master/r3-web-1.jpg" alt="r³ web monitoring interface"></p>
+
+<p>Failed jobs monitoring:</p>
+
+<p><img src="https://github.com/heynemann/r3/raw/master/r3-web-2.jpg" alt="r³ web monitoring interface"></p>
+
+<p>Stats:</p>
+
+<p><img src="https://github.com/heynemann/r3/raw/master/r3-web-3.jpg" alt="r³ web monitoring interface"></p>
+        </section>
+
+        <aside id="sidebar">
+          <a href="https://github.com/heynemann/r3/zipball/master" class="button">
+            <small>Download</small>
+            .zip file
+          </a>
+          <a href="https://github.com/heynemann/r3/tarball/master" class="button">
+            <small>Download</small>
+            .tar.gz file
+          </a>
+
+          <p class="repo-owner"><a href="https://github.com/heynemann/r3"></a> is maintained by <a href="https://github.com/heynemann">heynemann</a>.</p>
+
+          <p>This page was generated by <a href="pages.github.com">GitHub Pages</a> using the Architect theme by <a href="http://twitter.com/jasonlong">Jason Long</a>.</p>
+        </aside>
+      </div>
+    </div>
+
+            <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-33460934-1");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
