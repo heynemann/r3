@@ -213,7 +213,7 @@ how your r³ farm is working.
 
 Some screenshots of the monitoring application:
 
-![r³ web monitoring interface](https://github.com/heynemann/r3/raw/master/r3-web-1.jpg)
+![r³ web monitoring interface](https://github.com/heynemann/r3/raw/master/r3-web-4.jpg)
 
 Failed jobs monitoring:
 
