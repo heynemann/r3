@@ -67,7 +67,8 @@ header {
   padding-top: 40px;
   padding-bottom: 40px;
   font-family: 'Architects Daughter', 'Helvetica Neue', Helvetica, Arial, serif; 
-  background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;
+  /*background: #2e7bcf url(../images/header-bg.jpg) 0 0 repeat-x;*/
+  background-color: #4d7cb5
   border-bottom: solid 1px #275da1;
 }
 
@@ -75,6 +76,7 @@ header h1 {
   letter-spacing: -1px;
   font-size: 72px;
   color: #fff;
+  background: url(../images/logo.png) 0 0 no-repeat;
   line-height: 1;
   margin-bottom: 0.2em;
   width: 540px;
