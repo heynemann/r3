@@ -46,7 +46,7 @@ To run `r3-app`, given the above redis back-end, type:
 We'll learn more about the configuration file below.
 
 Given that you have a proper configuration file, your r3 service will be
-available at `http://localhost:8888`.
+available at `http://localhost:9999`.
 
 As to how we actually perform a map-reduce operation, we'll see that after the
 `Running Mappers` section.
@@ -185,10 +185,10 @@ To test the above solution, just clone r³'s repository and run the commands
 from the directory you just cloned.
 
 Given that we have the above working, we should have `r3-app` running at
-`http://localhost:8888`. In order to access our `count-words` job we'll point
+`http://localhost:9999`. In order to access our `count-words` job we'll point
 our browser to:
 
-    http://localhost:8888/count-words
+    http://localhost:9999/count-words
 
 This should return a JSON document with the resulting occurrences of words in
 the sample document.
