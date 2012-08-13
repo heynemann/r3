@@ -20,6 +20,8 @@ def main(arguments=None):
     parser.add_argument('-b', '--bind', type=str, default='0.0.0.0', help='the ip that r³ will bind to')
     parser.add_argument('-p', '--port', type=int, default=9999, help='the port that r³ will bind to')
     parser.add_argument('-l', '--loglevel', type=str, default='warning', help='the log level that r³ will run under')
+    parser.add_argument('-i', '--hide-index-page', action='store_true', default=False, help='indicates whether r³ app should show the help page')
+    parser.add_argument('-d', '--debug', action='store_true', default=False, help='indicates whether r³ app should run in debug mode')
     parser.add_argument('--redis-host', type=str, default='0.0.0.0', help='the ip that r³ will use to connect to redis')
     parser.add_argument('--redis-port', type=int, default=6379, help='the port that r³ will use to connect to redis')
     parser.add_argument('--redis-db', type=int, default=0, help='the database that r³ will use to connect to redis')
@@ -34,7 +36,7 @@ def main(arguments=None):
 
     logging.basicConfig(level=getattr(logging, args.loglevel.upper()))
 
-    application = R3ServiceApp(redis=c, config=cfg, log_level=args.loglevel.upper())
+    application = R3ServiceApp(redis=c, config=cfg, log_level=args.loglevel.upper(), debug=args.debug, show_index_page=not args.hide_index_page)
 
     server = HTTPServer(application)
     server.bind(args.port, args.bind)

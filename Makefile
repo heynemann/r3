@@ -1,6 +1,6 @@
 # %%%%%%%%%%%%%% SERVICE %%%%%%%%%%%%%%
 run:
-	@PYTHONPATH=$$PYTHONPATH:.:./test python r3/app/server.py --redis-port=7778 --redis-pass=r3 --config-file="./test/app_config.py"
+	@PYTHONPATH=$$PYTHONPATH:.:./test python r3/app/server.py --redis-port=7778 --redis-pass=r3 --config-file="./test/app_config.py" --debug
 
 
 # %%%%%%%%%%%%%% WORKER %%%%%%%%%%%%%%

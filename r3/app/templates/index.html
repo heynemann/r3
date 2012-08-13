@@ -1,0 +1,254 @@
+<!DOCTYPE HTML>
+<html>
+   <head>
+        <title>r³ - map reduce service</title>
+        <style>
+            /* This is here because of the monstrous base64 */
+            header a h1 {
+                background: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKIAAAA+CAMAAACfiDARAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6RUZGMjM3Q0FDM0E5MTFFMUFDMTNCQTVFOUI0MTVDQUYiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6RUZGMjM3Q0JDM0E5MTFFMUFDMTNCQTVFOUI0MTVDQUYiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDpFRkYyMzdDOEMzQTkxMUUxQUMxM0JBNUU5QjQxNUNBRiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDpFRkYyMzdDOUMzQTkxMUUxQUMxM0JBNUU5QjQxNUNBRiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/Pv5Mc2IAAABmUExURXqdyKa92liEuvT3+mOMvoqdtenv9m+Vw5Ct0d3m8bHF3rzO45u21sfW6KC52IWlzOfu9fP2+nyfyZSw01mFurjL4YioznGWxNDc66zC3Nvl8GWNv8TT5nKQtWWJtdLe7P///018tRm+KqsAAAQtSURBVHja7Jhrd+MoDIa5LRiwnaZJOp12dhH//0+OEL6mrseeuHH3nPAhh4BsHgSSX2Dx78t/8S6F3fDsPw/EB+L/DjGEyGAwFFNtBVs5fLAXTCxGPL/Udf28BaLiqv8PvKmk1gnE8XxmX306QipPL7cjjkqHmMpNiCek+1n/QsiXpYguFIVGn3kJmqfVMj5403qR+VAVWIXAFeOCh+xF4VIzwhJNUTAPHieBzaGYRzwf4e3ckC5FDBAAgpHkfSvQH5p7kHkvFjgyjm4C6GCQU4e8F2Wy8a1zkcuCDdFgs5NWzCHWAD+o8qutLEEE7QpkUJFJHFKnJS4hI0pH66qIhUPVhktFNocOMS+0Tc0G+BziBY4d6/NyRBEFQFo3B7bZVI0Xk1spWjOiahEN7U8/RmS5ubITiObAOdm+wmtu+bnGiyEN3JYmFJpRHciKmyZcqGuQdNBmhMiBpxKAKd4WSgqCa3r3aNynVXuREG2gMkaMzFncqWIhYn5FYP2Mk0OZbP4MRv3xuiKiCVHlhaYdRhPXferGcC6vEbNNu9A2G5fQpO8xYtH96VMYluNzXIUYddp1QoNXxGpyuBiMiLzKV4jJJlmCo0pGzI8K6UeIfX2MCMfTOsQDYJ6RIFWsJA5mm1G1NZjsUkRXTAwQycbiw9JEk40xjunRINUQUcgJxBjfT08Ap1WI8ZB2tMbIEBVWXLO9TGqV6ByPow29mHIoGlN/MsZlgDQZfAcbLXQFk4iUw49rP4CmlQpqKAkMY83+upINpt13YtCg6HeA6OAzRMyQU4nxXmKMwWTBrueeq/6miO8AdZzL3fshUr7MGbv5upync/c+iNKZkRajQD5fen9uoxdvQKzEqPMN4K2uL6hrL/GbIFbXgvGS2491/CaIUnzofl97dplX3VlYizIE1/RVbBWi2+AEOKu68wda2KSm0R8Fng9IbS9HZJsgzqjujOjTahkolSypj61AjNsgfq66G5lDq+Udl/SEdMsR5TaIM6qbELsDaNCkpHVYjhi2RJxW3WNEmW3cHoifq24BvBG2xlR2ddLZDnFadSeyAvei9FlNF4TP2tncGXFCdQs8tMdDCvISDy/Ko4LWFsNe2328OKG6YyGT4s6nlqy9VUijqnsjzqhu0UntrtYZ7YL4JWLsgfhAfCA+EP+gutvr60ZrUxrEChf7IV6r7u7KMGltrqXBinRU2Q9xrLo7RLouRPEQnU4VHfZEHKruHjHfIhoTocwqTey40EPV3SMqCdYV6bzlk9b2y09KX6y6e0QMlwrlWcHaLrMrYq+6++trKgcrG9Edd43ooerur6/zMQDPMtrns9VyxBty6hLV3V1fF1DiRkS+JLqFW+HLr0HsVXd/fU2XwAHjuEzyu4y7IX5U3WygutWV/N4XccNv9APxgfhAvAfiv/dB/C3AAEqhoW7VYnBkAAAAAElFTkSuQmCC') no-repeat;
+                width: 162px;
+                height: 62px;
+                margin-top: 20px;
+                margin-left: 40px;
+                text-indent: -999999px;
+            }
+
+
+
+            /* http://meyerweb.com/eric/tools/css/reset/ 
+               v2.0 | 20110126
+               License: none (public domain)
+            */
+
+            html, body, div, span, applet, object, iframe,
+            h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+            a, abbr, acronym, address, big, cite, code,
+            del, dfn, em, img, ins, kbd, q, s, samp,
+            small, strike, strong, sub, sup, tt, var,
+            b, u, i, center,
+            dl, dt, dd, ol, ul, li,
+            fieldset, form, label, legend,
+            table, caption, tbody, tfoot, thead, tr, th, td,
+            article, aside, canvas, details, embed, 
+            figure, figcaption, footer, header, hgroup, 
+            menu, nav, output, ruby, section, summary,
+            time, mark, audio, video {
+                margin: 0;
+                padding: 0;
+                border: 0;
+                font-size: 100%;
+                font: inherit;
+                vertical-align: baseline;
+            }
+            /* HTML5 display-role reset for older browsers */
+            article, aside, details, figcaption, figure, 
+            footer, header, hgroup, menu, nav, section {
+                display: block;
+            }
+            body {
+                line-height: 1;
+            }
+            ol, ul {
+                list-style: none;
+            }
+            blockquote, q {
+                quotes: none;
+            }
+            blockquote:before, blockquote:after,
+            q:before, q:after {
+                content: '';
+                content: none;
+            }
+            table {
+                border-collapse: collapse;
+                border-spacing: 0;
+            }
+
+            ul {
+                list-style: none;
+            }
+
+            body {
+                font-family: arial;
+                background-color: #4d7cb5;
+            }
+
+            .container {
+                width: 940px;
+                margin: 0 auto;
+            }
+
+            header {
+                height: 102px;
+                overflow: hidden;
+            }
+
+            header a {
+                display: block;
+                float: left;
+            }
+
+            footer {
+                width: 100%;
+                height: 100%;
+                background-color: #4d7cb5;
+                text-align: center;
+                overflow: hidden;
+                display: table;
+            }
+
+            footer .cell {
+                display: table-cell;
+                vertical-align: middle;
+                text-align: center;
+            }
+
+            footer a {
+                color: #fff;
+                font-weight: bold;
+                text-decoration: none;
+                font-size: 11px;
+                display: block;
+                margin: 20px 0;
+            }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
+
+            .body {
+                background-color: #fff;
+                padding-bottom: 20px;
+                width: 100%;
+            }
+
+            .body .container .contents {
+                padding-left: 40px;
+                padding-top: 20px;
+            }
+
+            .body .container .contents h1 {
+                font-size: 32px;
+                font-weight: bold;
+                color: #4d7cb5;
+            }
+
+            .body .container .contents .section {
+                margin-top: 20px;
+                line-height: 21px;
+                font-size: 13px;
+                color: #333;
+            }
+
+            .body .container .contents .section h2 {
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+
+            .body .container .contents .section h2.warning {
+                color: #a00000;
+            }
+
+            .body .container .contents .section .code {
+                margin: 10px;
+            }
+
+            .body .container .contents .available-mappers ul {
+                overflow: hidden;
+            }
+
+            .body .container .contents .available-mappers li {
+                font-size: 13px;
+                font-weight: bold;
+                color: #666;
+                float: left;
+                width: 225px;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="container">
+                <a href="/" alt="overview"><h1>r³ - map reduce service</h1></a>
+            </div>
+        </header>
+
+        <div class="body">
+            <div class="container">
+                <div class="contents">
+                    <h1>Welcome to r³</h1>
+
+                    {% if not input_streams %}
+                    <div class="stream section">
+                        <h2 class="warning">It appears you didn't setup any input streams!</h2>
+                        <p>Input Streams are classes that generate units-of-work that your mappers will work on.</p>
+                        <p>Creating them is as simple as creating a class that has a process method and a job_type argument:</p>
+                        <div class="code"><script src="https://gist.github.com/3341367.js"></script></div>
+                        <p>After you create your input stream, just add it to a config.py file:</p>
+                        <div class="code"><script src="https://gist.github.com/3341383.js?file=config.py"></script></div>
+                        <p>Then pass the file path as an argument to r3-app like this:</p>
+                        <div class="code"><script src="https://gist.github.com/3341383.js?file=r3.sh"></script></div>
+                        <p>For more information check the <a href="http://heynemann.github.com/r3/">documentation online</a>.</p>
+                    </div>
+                    {% end %}
+
+                    {% if not mappers %}
+                    <div class="mappers section">
+                        <h2 class="warning">It appears you didn't setup any mappers!</h2>
+                        <p>Setting mappers to run your map/reduce tasks is an integral part of r³ and is as simple as creating a class that inherits from Mapper:</p>
+                        <div class="code"><script src="https://gist.github.com/3341253.js?file=mapper.py"></script></div>
+                        <p>Running the mappers is pretty simple as well. Say you want to run four different mappers:</p>
+                        <div class="code"><script src="https://gist.github.com/3341253.js?file=mapper.sh"></script></div>
+                        <p>For more information check the <a href="http://heynemann.github.com/r3/">documentation online</a>.</p>
+                    </div>
+                    {% end %}
+
+                    {% if not has_reducers %}
+                    <div class="reducers section">
+                        <h2 class="warning">It appears you didn't setup any reducers!</h2>
+                        <p>Reducers are the classes that get the mapped units-of-work generated by your mappers and process them into a single coherent result.</p>
+                        <p>Creating them is as simple as creating a class that has a reduce method and a job_type argument:</p>
+                        <div class="code"><script src="https://gist.github.com/3341423.js"></script></div>
+                        <p>After you create your input stream, just add it to a config.py file:</p>
+                        <div class="code"><script src="https://gist.github.com/3341383.js?file=config.py"></script></div>
+                        <p>Then pass the file path as an argument to r3-app like this:</p>
+                        <div class="code"><script src="https://gist.github.com/3341383.js?file=r3.sh"></script></div>
+                        <p>For more information check the <a href="http://heynemann.github.com/r3/">documentation online</a>.</p>
+                    </div>
+                    {% end %}
+
+                    {% if mappers %}
+                    <div class="available-mappers section">
+                        <h2>Available Mappers ({{ len(mappers) }})</h2>
+                        <ul>
+                            {% for mapper in mappers %}
+                            <li>* {{ mapper }}</li>
+                            {% end %}
+                        </ul>
+                    </div>
+                    {% end %}
+
+                    {% if input_streams %}
+                    <div class="available-mappers section">
+                        <h2>Available Streams</h2>
+                        <p>Please be advised that the link below may not work if your input stream requires additional arguments in it's URL.</p>
+                        <ul>
+                            {% for stream in input_streams %}
+                            <li><a href="/stream/{{ stream }}">{{ stream }}</a></li>
+                            {% end %}
+                        </ul>
+                    </div>
+                    {% end %}
+
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="cell">
+                <a href="http://github.com/heynemann/r3" alt="r3 map reduce service">powered by r³ version {{ r3_version }}</a>
+            </div>
+        </footer>
+    </body>
+</html>
