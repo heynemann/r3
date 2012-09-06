@@ -19,7 +19,7 @@ class CountWordsMapper:
 
 def main():
     start = time.time()
-    items = CountWordsStream().process(None)
+    items = CountWordsStream().process(None, None)
     print "input stream took %.2f" % (time.time() - start)
 
     start = time.time()
@@ -30,7 +30,7 @@ def main():
     print "mapping took %.2f" % (time.time() - start)
 
     start = time.time()
-    CountWordsReducer().reduce(results)
+    CountWordsReducer().reduce(None, results)
     print "reducing took %.2f" % (time.time() - start)
 
 if __name__ == '__main__':
